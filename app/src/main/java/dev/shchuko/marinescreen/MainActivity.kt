@@ -7,25 +7,21 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import dev.shchuko.marinescreen.data.SettingsRepositoryImpl
-import dev.shchuko.marinescreen.domain.SettingsRepository
+import androidx.hilt.navigation.compose.hiltViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import dev.shchuko.marinescreen.ui.MainScreenPlaceholder
 import dev.shchuko.marinescreen.ui.MainViewModel
 import dev.shchuko.marinescreen.ui.TermsPopup
 import kotlin.system.exitProcess
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private lateinit var settingsRepo: SettingsRepository
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        settingsRepo = SettingsRepositoryImpl(applicationContext)
-
         setContent {
-            val viewModel = remember { MainViewModel(settingsRepo) }
+            val viewModel = hiltViewModel<MainViewModel>()
             val accepted by viewModel.termsAccepted.collectAsState()
 
             Box(modifier = Modifier.fillMaxSize()) {
