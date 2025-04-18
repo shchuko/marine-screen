@@ -9,6 +9,7 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
 kotlinxCoroutinesCore = "1.10.2"
+kotlinxDatetime = "0.6.0"
 lifecycleViewmodelCompose = "2.8.7"
 material = "1.12.0"
 activityCompose = "1.10.1"
@@ -25,6 +26,7 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
