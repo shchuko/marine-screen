@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Marine Screen"
 include(":app")
- 
+include(":domain")
+include(":data")
