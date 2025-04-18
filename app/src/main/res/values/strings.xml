@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Marine Screen</string>
+    <string name="app_name" translatable="false">Marine Screen</string>
     <string name="terms_and_conditions_title">Terms &amp; Conditions</string>
     <string name="terms_and_conditions_sub_title">You must agree to these terms before using that application</string>
     <string name="button_exit">Exit</string>

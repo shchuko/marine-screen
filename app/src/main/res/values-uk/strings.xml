@@ -1,0 +1,8 @@
+<resources>
+    <string name="terms_and_conditions_title">Умови використання</string>
+    <string name="terms_and_conditions_sub_title">Ви маєте погодитися з цими умовами перед використанням застосунку</string>
+    <string name="button_exit">Вихід</string>
+    <string name="button_prev">Назад</string>
+    <string name="button_next">Далі</string>
+    <string name="button_agree">Погоджуюсь</string>
+</resources>

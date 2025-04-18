@@ -1,0 +1,8 @@
+<resources>
+    <string name="terms_and_conditions_title">Условия использования</string>
+    <string name="terms_and_conditions_sub_title">Вы должны согласиться с этими условиями перед использованием приложения</string>
+    <string name="button_exit">Выход</string>
+    <string name="button_prev">Назад</string>
+    <string name="button_next">Далее</string>
+    <string name="button_agree">Согласен</string>
+</resources>
