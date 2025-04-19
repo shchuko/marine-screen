@@ -27,19 +27,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import dev.shchuko.marinescreen.ui.MainScreenPlaceholder
 import dev.shchuko.marinescreen.ui.MainViewModel
 import dev.shchuko.marinescreen.ui.TermsPopup
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import kotlin.system.exitProcess
 
 @AndroidEntryPoint
@@ -51,10 +47,12 @@ class MainActivity : ComponentActivity() {
             val viewModel = hiltViewModel<MainViewModel>()
             val termsAccepted by viewModel.termsAccepted.collectAsState()
             val stationSnapshot by viewModel.stationSnapshot.collectAsState()
+            val time by viewModel.time.collectAsState()
 
             Box(modifier = Modifier.fillMaxSize()) {
                 stationSnapshot?.let { snapshot ->
                     WeatherScreenStub(
+                        time = time,
                         stationName = snapshot.stationName,
                         wind = snapshot.current?.windSpeedKts,
                         windDir = snapshot.current?.windDirectionDeg,
@@ -84,6 +82,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun WeatherScreenStub(
+    time: String,
     stationName: String,
     wind: Float?,
     windDir: Int?,
@@ -94,7 +93,6 @@ fun WeatherScreenStub(
     onSettingsClick: () -> Unit = {},
     onWarningClick: () -> Unit = {}
 ) {
-    val timeFormatted = remember(updatedAt) { updatedAt.formatAsFull() }
     val updatedAgo = remember(updatedAt) { updatedAt.formatAgo() }
 
     Box(
@@ -109,7 +107,7 @@ fun WeatherScreenStub(
                 .align(Alignment.TopEnd),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(timeFormatted, color = Color.White, fontSize = 14.sp)
+            Text(time, color = Color.White, fontSize = 14.sp)
             Spacer(modifier = Modifier.width(16.dp))
             Text(stationName, color = Color.White, fontSize = 16.sp)
             IconButton(onClick = onSettingsClick) {
@@ -165,18 +163,6 @@ fun WeatherScreenStub(
             )
         }
     }
-}
-
-fun Instant.formatAsTime(): String {
-    val local = toLocalDateTime(TimeZone.currentSystemDefault())
-    return "%02d:%02d".format(local.hour, local.minute)
-}
-
-fun Instant.formatAsFull(): String {
-    val local = toLocalDateTime(TimeZone.currentSystemDefault())
-    return "%02d/%02d/%04d %02d:%02d".format(
-        local.dayOfMonth, local.monthNumber, local.year, local.hour, local.minute
-    )
 }
 
 fun Instant.formatAgo(): String {

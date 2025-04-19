@@ -1,5 +1,6 @@
 [versions]
 agp = "8.9.1"
+commonsNet = "3.11.1"
 kotlin = "2.0.21"
 jetbrainsKotlinJvm = "2.0.21"
 composeCompiler = "2.0.21"
@@ -21,6 +22,7 @@ hiltNavigationCompose = "1.2.0"
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleViewmodelCompose" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
+commons-net = { module = "commons-net:commons-net", version.ref = "commonsNet" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
