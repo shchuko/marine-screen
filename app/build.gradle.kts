@@ -42,15 +42,15 @@ android {
 }
 
 dependencies {
-    debugImplementation(libs.androidx.ui.tooling)
-    
-    implementation(libs.activity.compose)
+    kapt(libs.hilt.compiler)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.androidx.ui.tooling.preview.android)
-    implementation(libs.compose.androidx.material3)
-    implementation(libs.compose.androidx.ui)
+    implementation(libs.compose.activity)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.tooling.preview.android)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.kotlinx.datetime)
@@ -58,5 +58,5 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
 
-    kapt(libs.hilt.compiler)
+    debugImplementation(libs.compose.ui.tooling)
 }
