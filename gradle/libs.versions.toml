@@ -2,7 +2,7 @@
 agp = "8.9.1"
 commonsNet = "3.11.1"
 kotlin = "2.0.21"
-jetbrainsKotlinJvm = "2.0.21"
+jetbrainsKotlinJvm = "2.1.20"
 composeCompiler = "2.0.21"
 coreKtx = "1.16.0"
 junit = "4.13.2"
@@ -17,6 +17,11 @@ activityCompose = "1.10.1"
 composeBom = "2025.04.00"
 hilt = "2.53"
 hiltNavigationCompose = "1.2.0"
+encryptedPrefs = "1.1.0-alpha07"
+tv-foundation = "1.0.0-alpha12"
+tv-material = "1.0.0"
+uiToolingPreviewAndroid = "1.7.8"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,10 +38,15 @@ material = { group = "com.google.android.material", name = "material", version.r
 activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
 compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
 compose-androidx-material3 = { module = "androidx.compose.material3:material3" }
+#tv-foundation = { group = "androidx.tv", name = "tv-foundation", version.ref = "tv-foundation" }
+#tv-material = { group = "androidx.tv", name = "tv-material", version.ref = "tv-material" }
 compose-androidx-ui = { module = "androidx.compose.ui:ui" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+encrypted-prefs = { module = "androidx.security:security-crypto", version.ref = "encryptedPrefs" }
+androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
+androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

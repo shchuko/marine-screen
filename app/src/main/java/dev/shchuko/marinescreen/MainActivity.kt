@@ -31,8 +31,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.shchuko.marinescreen.ui.MainViewModel
+import dev.shchuko.marinescreen.ui.Screen
+import dev.shchuko.marinescreen.ui.SettingsScreen
 import dev.shchuko.marinescreen.ui.TermsPopup
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -44,39 +49,60 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val navController = rememberNavController()
+
             val viewModel = hiltViewModel<MainViewModel>()
             val termsAccepted by viewModel.termsAccepted.collectAsState()
             val stationSnapshot by viewModel.stationSnapshot.collectAsState()
             val time by viewModel.time.collectAsState()
+            val settings by viewModel.stationSettings.collectAsState()
 
-            Box(modifier = Modifier.fillMaxSize()) {
-                stationSnapshot?.let { snapshot ->
-                    WeatherScreenStub(
-                        time = time,
-                        stationName = snapshot.stationName,
-                        wind = snapshot.current?.windSpeedKts,
-                        windDir = snapshot.current?.windDirectionDeg,
-                        temperatureC = snapshot.current?.temperatureC,
-                        temperatureF = snapshot.current?.temperatureF,
-                        humidity = snapshot.current?.humidityPercent,
-                        updatedAt = snapshot.lastUpdatedAt
-                    )
-                } ?: Box(Modifier.fillMaxSize()) {
-                    Text("Loading...")
+            NavHost(
+                navController = navController,
+                startDestination = Screen.Weather.route
+            ) {
+                composable(Screen.Weather.route) {
+                    stationSnapshot?.let { snapshot ->
+                        WeatherScreenStub(
+                            time = time,
+                            stationName = snapshot.stationName,
+                            wind = snapshot.current?.windSpeedKts,
+                            windDir = snapshot.current?.windDirectionDeg,
+                            temperatureC = snapshot.current?.temperatureC,
+                            temperatureF = snapshot.current?.temperatureF,
+                            humidity = snapshot.current?.humidityPercent,
+                            updatedAt = snapshot.lastUpdatedAt,
+                            onSettingsClick = { navController.navigate(Screen.Settings.route) }
+                        )
+                    } ?: Box(Modifier.fillMaxSize()) {
+                        Text("Loading...")
+                    }
                 }
 
-                if (!termsAccepted) {
-                    TermsPopup(
-                        onAccept = { viewModel.acceptTerms() },
-                        onExit = {
-                            viewModel.rejectTerms()
-                            finishAffinity()
-                            exitProcess(0)
-                        }
+                composable(Screen.Settings.route) {
+                    SettingsScreen(
+                        stationSettings = settings,
+                        onSaveClick = {
+                            viewModel.saveStationSettings(it)
+                        },
+                        onTestConnection = { uid, password -> /* TODO */ },
+                        onBackConfirmed = { navController.popBackStack() }
                     )
                 }
             }
+
+            if (!termsAccepted) {
+                TermsPopup(
+                    onAccept = { viewModel.acceptTerms() },
+                    onExit = {
+                        viewModel.rejectTerms()
+                        finishAffinity()
+                        exitProcess(0)
+                    },
+                )
+            }
         }
+
     }
 }
 

@@ -9,7 +9,7 @@ android {
     compileSdk = 35
 
     defaultConfig {
-        minSdk = 21
+        minSdk = 23
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -43,4 +43,5 @@ dependencies {
     implementation(libs.kotlinx.datetime)
     implementation(project(":domain"))
     implementation(libs.commons.net)
+    implementation(libs.encrypted.prefs)
 }

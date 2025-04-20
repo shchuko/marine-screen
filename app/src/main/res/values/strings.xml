@@ -1,9 +1,27 @@
 <resources>
     <string name="app_name" translatable="false">Marine Screen</string>
-    <string name="terms_and_conditions_title">Terms &amp; Conditions</string>
-    <string name="terms_and_conditions_sub_title">You must agree to these terms before using that application</string>
-    <string name="button_exit">Exit</string>
-    <string name="button_prev">Prev</string>
-    <string name="button_next">Next</string>
     <string name="button_agree">Agree</string>
+    <string name="button_back">Back</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_discard">Discard</string>
+    <string name="button_exit">Exit</string>
+    <string name="button_hide_password">Hide Password</string>
+    <string name="button_next">Next</string>
+    <string name="button_prev">Prev</string>
+    <string name="button_reveal_password">Reveal Password</string>
+    <string name="button_save">Save</string>
+    <string name="button_test_connection">Test Connection</string>
+    <string name="display_name_default" translatable="false">Local Weather</string>
+    <string name="display_name_label">Station Name (leave empty to use a default one)</string>
+    <string name="display_name_placeholder">e.g., Sevan</string>
+    <string name="password_label">WindGuru Station Password</string>
+    <string name="password_placeholder">Enter https://stations.windguru.cz password</string>
+    <string name="password_value_hidden">&lt;current password is hidden&gt;</string>
+    <string name="settings_title">Settings</string>
+    <string name="station_uid_label">WindGuru Station UID</string>
+    <string name="station_uid_placeholder">Enter https://stations.windguru.cz UID</string>
+    <string name="terms_and_conditions_sub_title">You must agree to these terms before using that application</string>
+    <string name="terms_and_conditions_title">Terms &amp; Conditions</string>
+    <string name="unsaved_message">You have unsaved changes. Do you want to discard them?</string>
+    <string name="unsaved_title">Unsaved Changes</string>
 </resources>

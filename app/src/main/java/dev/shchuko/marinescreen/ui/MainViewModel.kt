@@ -6,7 +6,13 @@ import com.example.domain.time.PreciseTimeProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.shchuko.marinescreen.domain.SettingsRepository
 import dev.shchuko.marinescreen.domain.model.StationSnapshot
+import dev.shchuko.marinescreen.domain.model.WeatherStationSettings
 import dev.shchuko.marinescreen.domain.repository.StationRepository
+import dev.shchuko.marinescreen.domain.usecase.AcceptTermsUseCase
+import dev.shchuko.marinescreen.domain.usecase.ObserveStationSettingsUseCase
+import dev.shchuko.marinescreen.domain.usecase.ObserveTermsAcceptedUseCase
+import dev.shchuko.marinescreen.domain.usecase.RejectTermsUseCase
+import dev.shchuko.marinescreen.domain.usecase.UpdateStationSettingsUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +24,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    private val acceptTermsUseCase: AcceptTermsUseCase,
+    private val rejectTermsUseCase: RejectTermsUseCase,
+    private val observeTermsAcceptedUseCase: ObserveTermsAcceptedUseCase,
+    private val observeStationSettings: ObserveStationSettingsUseCase,
+    private val updateStationSettings: UpdateStationSettingsUseCase,
     private val settingsRepository: SettingsRepository,
     private val stationRepository: StationRepository,
     private val timeProvider: PreciseTimeProvider,
@@ -26,8 +37,9 @@ class MainViewModel @Inject constructor(
     private val _time = MutableStateFlow("00/00/0000 00:00:00")
     val time: StateFlow<String> = _time
 
-    val termsAccepted: StateFlow<Boolean> = settingsRepository.termsAcceptedFlow
+    val termsAccepted = observeTermsAcceptedUseCase()
     val stationSnapshot: StateFlow<StationSnapshot?> = stationRepository.station
+    val stationSettings = observeStationSettings()
 
     init {
         viewModelScope.launch {
@@ -41,11 +53,15 @@ class MainViewModel @Inject constructor(
     }
 
     fun acceptTerms() {
-        viewModelScope.launch { settingsRepository.setTermsAccepted() }
+        viewModelScope.launch { acceptTermsUseCase() }
     }
 
     fun rejectTerms() {
-        viewModelScope.launch { settingsRepository.setTermsRejected() }
+        viewModelScope.launch { rejectTermsUseCase() }
+    }
+
+    fun saveStationSettings(settings: WeatherStationSettings) {
+        viewModelScope.launch { updateStationSettings(settings) }
     }
 
     fun refreshStation() {

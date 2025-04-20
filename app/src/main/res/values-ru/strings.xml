@@ -1,8 +1,25 @@
 <resources>
-    <string name="terms_and_conditions_title">Условия использования</string>
-    <string name="terms_and_conditions_sub_title">Вы должны согласиться с этими условиями перед использованием приложения</string>
-    <string name="button_exit">Выход</string>
-    <string name="button_prev">Назад</string>
-    <string name="button_next">Далее</string>
     <string name="button_agree">Согласен</string>
+    <string name="button_back">Назад</string>
+    <string name="button_cancel">Отмена</string>
+    <string name="button_discard">Отменить</string>
+    <string name="button_exit">Выход</string>
+    <string name="button_hide_password">Скрыть пароль</string>
+    <string name="button_next">Далее</string>
+    <string name="button_prev">Назад</string>
+    <string name="button_reveal_password">Показать пароль</string>
+    <string name="button_save">Сохранить</string>
+    <string name="button_test_connection">Проверить соединение</string>
+    <string name="display_name_label">Название станции (оставьте пустым, чтобы использовать имя по умолчанию)</string>
+    <string name="display_name_placeholder">Например: Севан</string>
+    <string name="password_label">Пароль</string>
+    <string name="password_placeholder">Введите пароль</string>
+    <string name="password_value_hidden">&lt;текущий пароль скрыт&gt;</string>
+    <string name="settings_title">Настройки</string>
+    <string name="station_uid_label">UID станции</string>
+    <string name="station_uid_placeholder">Введите UID станции</string>
+    <string name="terms_and_conditions_sub_title">Вы должны согласиться с этими условиями перед использованием приложения</string>
+    <string name="terms_and_conditions_title">Условия использования</string>
+    <string name="unsaved_message">Выйти без сохранения изменений?</string>
+    <string name="unsaved_title">Несохранённые изменения</string>
 </resources>

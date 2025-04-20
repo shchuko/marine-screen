@@ -1,8 +1,25 @@
 <resources>
-    <string name="terms_and_conditions_title">Умови використання</string>
-    <string name="terms_and_conditions_sub_title">Ви маєте погодитися з цими умовами перед використанням застосунку</string>
-    <string name="button_exit">Вихід</string>
-    <string name="button_prev">Назад</string>
-    <string name="button_next">Далі</string>
     <string name="button_agree">Погоджуюсь</string>
+    <string name="button_back">Назад</string>
+    <string name="button_cancel">Скасувати</string>
+    <string name="button_discard">Скасувати</string>
+    <string name="button_exit">Вихід</string>
+    <string name="button_hide_password">Приховати пароль</string>
+    <string name="button_next">Далі</string>
+    <string name="button_prev">Назад</string>
+    <string name="button_reveal_password">Показати пароль</string>
+    <string name="button_save">Зберегти</string>
+    <string name="button_test_connection">Перевірити з’єднання</string>
+    <string name="display_name_label">Назва станції (залиште порожнім, щоб використовувати стандартне)</string>
+    <string name="display_name_placeholder">Наприклад: Севан</string>
+    <string name="password_label">Пароль</string>
+    <string name="password_placeholder">Введіть пароль</string>
+    <string name="password_value_hidden">&lt;пароль приховано&gt;</string>
+    <string name="settings_title">Налаштування</string>
+    <string name="station_uid_label">UID станції</string>
+    <string name="station_uid_placeholder">Введіть UID станції</string>
+    <string name="terms_and_conditions_sub_title">Ви маєте погодитися з цими умовами перед використанням застосунку</string>
+    <string name="terms_and_conditions_title">Умови використання</string>
+    <string name="unsaved_message">Вийти без збереження змін?</string>
+    <string name="unsaved_title">Незбережені зміни</string>
 </resources>

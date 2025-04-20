@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "dev.shchuko.marinescreen"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -42,20 +42,21 @@ android {
 }
 
 dependencies {
-    kapt(libs.hilt.compiler)
-
-    implementation(project(":data"))
-    implementation(project(":domain"))
-
-    implementation(libs.androidx.core.ktx)
+    debugImplementation(libs.androidx.ui.tooling)
+    
     implementation(libs.activity.compose)
-
-    implementation(platform(libs.compose.bom))
-    implementation(libs.compose.androidx.ui)
-    implementation(libs.compose.androidx.material3)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.ui.tooling.preview.android)
+    implementation(libs.compose.androidx.material3)
+    implementation(libs.compose.androidx.ui)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.kotlinx.datetime)
+    implementation(platform(libs.compose.bom))
+    implementation(project(":data"))
+    implementation(project(":domain"))
+
+    kapt(libs.hilt.compiler)
 }

@@ -1,8 +1,0 @@
-<resources>
-    <string name="terms_and_conditions_title">Օգտագործման պայմաններ</string>
-    <string name="terms_and_conditions_sub_title">Դուք պետք է համաձայնեք այս պայմաններին՝ ծրագիրը օգտագործելուց առաջ</string>
-    <string name="button_exit">Ելք</string>
-    <string name="button_prev">Նախորդ</string>
-    <string name="button_next">Հաջորդ</string>
-    <string name="button_agree">Համաձայն եմ</string>
-</resources>
