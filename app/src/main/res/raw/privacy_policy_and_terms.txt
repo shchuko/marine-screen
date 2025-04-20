@@ -1,0 +1,18 @@
+Privacy Policy and Terms of Use
+
+This application does not collect, store, or transmit any personal data. All user settings, including any credentials for third-party services such as Windguru, are stored locally on the device and are never transmitted or shared externally. The app does not use advertising, analytics, or third-party tracking services.
+
+
+By using this application, you acknowledge and agree to the following:
+
+- This application is free, non-commercial, and open-source.
+
+- The application is not affiliated with, endorsed by, or certified by any third-party weather data providers, including Windguru.cz.
+
+- The application does not collect personal data, serve advertisements, or include any form of analytics or user tracking.
+
+- This software is provided "as is", without warranties or conditions of any kind, either express or implied. Use of the application is at your own risk.
+
+- This application is distributed under the terms of the Apache License, Version 2.0: https://www.apache.org/licenses/LICENSE-2.0
+
+If you do not agree to these terms, do not use the application.

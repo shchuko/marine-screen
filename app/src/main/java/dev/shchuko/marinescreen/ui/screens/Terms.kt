@@ -23,10 +23,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -37,6 +39,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -45,7 +48,9 @@ import androidx.compose.ui.unit.dp
 import dev.shchuko.marinescreen.R
 import dev.shchuko.marinescreen.ui.tv.TvFocusableButton
 import dev.shchuko.marinescreen.ui.tv.TvFocusableTextButton
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -61,7 +66,7 @@ fun TermsPopupContent(
     val scrollState = rememberScrollState()
     val scrolledToEnd by remember { derivedStateOf { scrollState.value >= scrollState.maxValue } }
     val prevButtonEnabled by remember { derivedStateOf { scrollState.value > 0 } }
-    val termsText = remember { buildTermsText() }
+    val termsText by rememberPrivacyPolicyText()
     val focusRequester = remember { FocusRequester() }
     var isReadyToRequestFocus by remember { mutableStateOf(false) }
     var termsTextHeight by remember { mutableIntStateOf(0) }
@@ -182,22 +187,14 @@ fun TermsPopupContent(
     }
 }
 
-
-private fun buildTermsText(): String = """
-    By using this application, you acknowledge and agree to the following:
-
-    - This application is free, non-commercial, and open-source.
-
-    - The application is not affiliated with, endorsed by, or certified by any third-party weather data providers, including Windguru.cz.
-
-    - The application does not collect personal data, serve advertisements, or include any form of analytics or user tracking.
-
-    - This software is provided "as is", without warranties or conditions of any kind, either express or implied. Use of the application is at your own risk.
-
-    - This application is distributed under the terms of the Apache License, Version 2.0: https://www.apache.org/licenses/LICENSE-2.0
-
-    If you do not agree to these terms, do not use the application.
-""".trimIndent()
-
-
-
+@Composable
+private fun rememberPrivacyPolicyText(): State<String> {
+    val context = LocalContext.current
+    return produceState(initialValue = "", context) {
+        value = withContext(Dispatchers.IO) {
+            context.resources.openRawResource(R.raw.privacy_policy_and_terms)
+                .bufferedReader()
+                .use { it.readText() }
+        }
+    }
+}
