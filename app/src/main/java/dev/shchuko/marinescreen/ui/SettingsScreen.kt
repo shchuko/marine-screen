@@ -1,6 +1,7 @@
 package dev.shchuko.marinescreen.ui
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -78,28 +80,13 @@ fun SettingsScreen(
     onTestConnection: (uid: String, password: String) -> Unit = { _, _ -> },
     onBackConfirmed: () -> Unit = {},
 ) {
+    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val backButtonFocusRequester = remember { FocusRequester() }
     val revealPasswordButtonFocusRequester = remember { FocusRequester() }
 
     var displayName by remember { mutableStateOf(stationSettings.displayName) }
     var stationUid by remember { mutableStateOf(stationSettings.stationUid) }
-
-    /*
-    1. old password not set
-        * show empty field
-        * reveal button active
-    2. old password was set, field value edit is not in progress
-        * show <password hidden> placeholder instead of password
-        * reveal button inactive
-    3. old password was set, field value edit is not in progress, nothing was entered
-        * show empty field
-        * reveal button inactive
-    4. old password was set, value was entered
-        * show password or its hidden representation *** (depends on the hide/reveal button press)
-        * reveal button active
-    flags:
-     */
 
     var password by remember { mutableStateOf("") }
     var passwordState by remember {
@@ -289,6 +276,7 @@ fun SettingsScreen(
                             stationPassword = effectivePasswordValue,
                         )
                     )
+                    Toast.makeText(context, "Setting saved", Toast.LENGTH_SHORT).show()
 
                     passwordModified = false
                     backButtonFocusRequester.requestFocus()
