@@ -44,6 +44,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dev.shchuko.marinescreen.R
+import dev.shchuko.marinescreen.ui.tv.TvFocusableButton
+import dev.shchuko.marinescreen.ui.tv.TvFocusableTextButton
 import kotlinx.coroutines.launch
 
 @Composable

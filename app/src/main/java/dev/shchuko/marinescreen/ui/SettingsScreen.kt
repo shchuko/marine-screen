@@ -44,6 +44,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.shchuko.marinescreen.R
 import dev.shchuko.marinescreen.domain.model.WeatherStationSettings
+import dev.shchuko.marinescreen.ui.tv.EditableOutlinedTextField
+import dev.shchuko.marinescreen.ui.tv.TvFocusableButton
+import dev.shchuko.marinescreen.ui.tv.TvFocusableTextButton
 
 private enum class PasswordState(
     val alwaysShowFieldValue: Boolean,

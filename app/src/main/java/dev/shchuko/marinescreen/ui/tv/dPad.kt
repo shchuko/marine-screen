@@ -1,4 +1,4 @@
-package dev.shchuko.marinescreen.ui
+package dev.shchuko.marinescreen.ui.tv
 
 import android.view.KeyEvent
 import androidx.compose.ui.Modifier

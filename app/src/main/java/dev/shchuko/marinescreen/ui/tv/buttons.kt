@@ -1,4 +1,4 @@
-package dev.shchuko.marinescreen.ui
+package dev.shchuko.marinescreen.ui.tv
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.focusable
