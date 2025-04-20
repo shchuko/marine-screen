@@ -1,10 +1,13 @@
+Terms of Use
+============
+
 By using this application, you acknowledge and agree to the following:
 
 - This application is free, non-commercial, and open-source.
 
-- The application is not affiliated with, endorsed by, or certified by any third-party weather data providers, including Windguru.cz.
+- It is not affiliated with, endorsed by, or certified by any third-party weather data providers, including WindGuru.cz.
 
-- The application does not collect personal data, serve advertisements, or include any form of analytics or user tracking.
+- The application does not collect personal data, serve advertisements, or include analytics or user tracking of any kind.
 
 - This software is provided "as is", without warranties or conditions of any kind, either express or implied. Use of the application is at your own risk.
 
