@@ -24,4 +24,4 @@ data class WeatherStationSettings(
     }
 }
 
-class InvalidSettingsException() : Exception()
+class InvalidSettingsException : Exception()
