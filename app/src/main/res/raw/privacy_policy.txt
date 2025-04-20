@@ -1,0 +1,41 @@
+Privacy Policy
+===============
+Last updated: April 20, 2025
+
+This Privacy Policy describes Our policies regarding privacy and data use in relation to the
+Marine Screen application.
+
+We want to make it clear: We do not collect, store, or share any personal information from users.
+
+No Collection of Personal Data
+------------------------------
+Marine Screen does not collect any personally identifiable information (such as name, email address,
+phone number, or location), usage data, or any other information that could be used to identify you.
+
+We do not use tracking technologies, cookies, or analytics tools within the application.
+Your use of the app is entirely private and anonymous.
+
+Children’s Privacy
+------------------
+Our Service does not knowingly collect data from anyone, including children under the age of 13.
+Since we do not collect any personal information, there is no data to be removed.
+
+Third-Party Services
+--------------------
+Marine Screen does not integrate with or share data with any third-party services that would result
+in the collection or transmission of your personal data.
+
+If you follow external links from the application (e.g., to a website or support page),
+please review their privacy policies separately, as they are outside our control.
+
+Changes to This Privacy Policy
+------------------------------
+Although we don’t collect any personal data, we may occasionally update this policy to reflect
+changes in our practices or legal requirements.
+Updates will be posted here with a revised “Last updated” date.
+
+Contact Us
+----------
+If you have any questions about this Privacy Policy, you can contact us:
+* By email: yaroshchuk2000@gmail.com
+* By visiting: https://github.com/shchuko

@@ -192,7 +192,7 @@ private fun rememberPrivacyPolicyText(): State<String> {
     val context = LocalContext.current
     return produceState(initialValue = "", context) {
         value = withContext(Dispatchers.IO) {
-            context.resources.openRawResource(R.raw.privacy_policy_and_terms)
+            context.resources.openRawResource(R.raw.terms)
                 .bufferedReader()
                 .use { it.readText() }
         }
