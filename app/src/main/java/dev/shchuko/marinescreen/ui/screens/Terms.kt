@@ -1,5 +1,6 @@
-package dev.shchuko.marinescreen.ui
+package dev.shchuko.marinescreen.ui.screens
 
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.animateScrollBy
@@ -17,8 +18,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -37,54 +36,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.shchuko.marinescreen.R
 import dev.shchuko.marinescreen.ui.tv.TvFocusableButton
 import dev.shchuko.marinescreen.ui.tv.TvFocusableTextButton
 import kotlinx.coroutines.launch
 
-@Composable
-fun TermsPopup(
-    onAccept: () -> Unit,
-    onExit: () -> Unit
-) {
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xCC000000)), // dimmed background
-        color = Color.Transparent
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(48.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Card(
-                modifier = Modifier.fillMaxSize(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                shape = MaterialTheme.shapes.medium,
-                elevation = CardDefaults.cardElevation(8.dp)
-            ) {
-                TermsPopupContent(
-                    onAccept = onAccept,
-                    onExit = onExit
-                )
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun TermsPopupContent(
-    onAccept: () -> Unit,
-    onExit: () -> Unit
+@Preview(
+    device = "id:tv_1080p",
+    uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_TELEVISION,
+)
+fun TermsPopupContent(
+    onAccept: () -> Unit = {},
+    onExit: () -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
@@ -101,7 +72,7 @@ private fun TermsPopupContent(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp)
+                .padding(32.dp)
         ) {
             Text(
                 text = stringResource(R.string.terms_and_conditions_title),
@@ -150,12 +121,11 @@ private fun TermsPopupContent(
             ) {
                 TvFocusableTextButton(
                     onClick = onExit,
-                    modifier = Modifier
-                        .focusProperties {
-                            left = FocusRequester.Cancel
-                            up = FocusRequester.Cancel
-                            down = FocusRequester.Cancel
-                        }
+                    modifier = Modifier.focusProperties {
+                        left = FocusRequester.Cancel
+                        up = FocusRequester.Cancel
+                        down = FocusRequester.Cancel
+                    }
                 ) {
                     Text(stringResource(R.string.button_exit))
                 }
@@ -171,11 +141,10 @@ private fun TermsPopupContent(
                     },
                     enabled = prevButtonEnabled,
                     focusable = prevButtonEnabled,
-                    modifier = Modifier
-                        .focusProperties {
-                            up = FocusRequester.Cancel
-                            down = FocusRequester.Cancel
-                        }
+                    modifier = Modifier.focusProperties {
+                        up = FocusRequester.Cancel
+                        down = FocusRequester.Cancel
+                    }
                 ) {
                     Text(stringResource(R.string.button_prev))
                 }

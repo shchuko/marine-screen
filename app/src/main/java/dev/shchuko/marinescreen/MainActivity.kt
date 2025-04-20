@@ -38,7 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.shchuko.marinescreen.ui.MainViewModel
 import dev.shchuko.marinescreen.ui.Screen
 import dev.shchuko.marinescreen.ui.SettingsScreen
-import dev.shchuko.marinescreen.ui.TermsPopup
+import dev.shchuko.marinescreen.ui.screens.TermsPopupContent
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.system.exitProcess
@@ -52,15 +52,32 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             val viewModel = hiltViewModel<MainViewModel>()
-            val termsAccepted by viewModel.termsAccepted.collectAsState()
+            val termsAccepted: Boolean by viewModel.termsAccepted.collectAsState()
             val stationSnapshot by viewModel.stationSnapshot.collectAsState()
             val time by viewModel.time.collectAsState()
             val settings by viewModel.stationSettings.collectAsState()
 
             NavHost(
                 navController = navController,
-                startDestination = Screen.Weather.route
+                startDestination = if (termsAccepted) {
+                    Screen.Weather.route
+                } else {
+                    Screen.Terms.route
+                }
             ) {
+                composable(Screen.Terms.route) {
+                    TermsPopupContent(
+                        onAccept = {
+                            viewModel.acceptTerms()
+                            navController.navigate(Screen.Weather.route)
+                        },
+                        onExit = {
+                            viewModel.rejectTerms()
+                            finishAffinity()
+                            exitProcess(0)
+                        }
+                    )
+                }
                 composable(Screen.Weather.route) {
                     stationSnapshot?.let { snapshot ->
                         WeatherScreenStub(
@@ -89,17 +106,6 @@ class MainActivity : ComponentActivity() {
                         onBackConfirmed = { navController.popBackStack() }
                     )
                 }
-            }
-
-            if (!termsAccepted) {
-                TermsPopup(
-                    onAccept = { viewModel.acceptTerms() },
-                    onExit = {
-                        viewModel.rejectTerms()
-                        finishAffinity()
-                        exitProcess(0)
-                    },
-                )
             }
         }
 
@@ -148,12 +154,21 @@ fun WeatherScreenStub(
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Wind ${wind?.toInt() ?: "..."} kts", color = Color.White, fontSize = 36.sp, fontWeight = FontWeight.Bold)
+            Text(
+                "Wind ${wind?.toInt() ?: "..."} kts",
+                color = Color.White,
+                fontSize = 36.sp,
+                fontWeight = FontWeight.Bold
+            )
             Spacer(modifier = Modifier.height(4.dp))
             Text("Dir ${windDir ?: "..."}°", color = Color.White, fontSize = 20.sp)
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Temp ${temperatureC?.let { "+${it.toInt()}°C" } ?: "..."} / ${temperatureF?.let { "+${it.toInt()}°F" } ?: "..."}", color = Color.White, fontSize = 18.sp)
-            Text("Humidity ${humidity?.let { "$it%" } ?: "..."}", color = Color.White, fontSize = 18.sp)
+            Text("Temp ${temperatureC?.let { "+${it.toInt()}°C" } ?: "..."} / ${temperatureF?.let { "+${it.toInt()}°F" } ?: "..."}",
+                color = Color.White,
+                fontSize = 18.sp)
+            Text("Humidity ${humidity?.let { "$it%" } ?: "..."}",
+                color = Color.White,
+                fontSize = 18.sp)
         }
 
         // Bottom left: source
