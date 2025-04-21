@@ -147,7 +147,7 @@ class WindGuruStationRepository(
                     current = getCurrentMeasurement(merged, now),
                     historical = merged,
                     error = error,
-                    lastUpdatedAt = now,
+                    lastUpdatedAt = if (error != null) prevMeasurements.lastUpdatedAt else now,
                 )
                 Log.d(LOG_TAG, "Update state done uid=${settings.windGuruUid} size=${merged.size}")
 
