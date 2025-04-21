@@ -7,9 +7,9 @@ import dev.shchuko.marinescreen.domain.PreciseTimeProvider
 import dev.shchuko.marinescreen.domain.model.PreciseTime
 import dev.shchuko.marinescreen.domain.model.WindGuruSettings
 import dev.shchuko.marinescreen.domain.usecase.AcceptTermsUseCase
+import dev.shchuko.marinescreen.domain.usecase.ObserveStationMeasurementsUseCase
 import dev.shchuko.marinescreen.domain.usecase.ObserveStationSettingsUseCase
 import dev.shchuko.marinescreen.domain.usecase.ObserveTermsAcceptedUseCase
-import dev.shchuko.marinescreen.domain.usecase.ObserveStationMeasurementsUseCase
 import dev.shchuko.marinescreen.domain.usecase.RejectTermsUseCase
 import dev.shchuko.marinescreen.domain.usecase.UpdateStationSettingsUseCase
 import kotlinx.coroutines.delay
@@ -18,9 +18,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
