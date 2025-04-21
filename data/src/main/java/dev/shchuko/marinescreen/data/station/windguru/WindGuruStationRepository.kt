@@ -49,7 +49,7 @@ class WindGuruStationRepository(
     private val currentMeasurementMaxAge: Duration = 5.minutes,
 ) : StationRepository {
     companion object {
-        private val LOG_TAG = "WindGuruStation"
+        private const val LOG_TAG = "WindGuruStation"
     }
 
     private val measurementUpdateMutex = Mutex()
