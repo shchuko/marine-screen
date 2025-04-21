@@ -319,7 +319,7 @@ fun WindHistoryChart(
                         dynamicShader = null
                     ),
                     guideline = null,
-                    itemPlacer = remember { SameDistanceItemPlacer(6) },
+                    itemPlacer = remember { SameDistanceItemPlacer(4) },
                     valueFormatter = { x, _, _ ->
                         val hours = -(x / 3600).roundToInt()
                         if (hours == 1) "$hours hour ago" else "$hours hours ago"
