@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class SettingsRepositoryImpl(context: Context) : SettingsRepository {
-
     companion object {
         private const val SHARED_PREFERENCES_NAME = "app_prefs"
 
@@ -30,17 +29,17 @@ class SettingsRepositoryImpl(context: Context) : SettingsRepository {
     private val _stationSettingsFlow = MutableStateFlow(readStationSettings())
     override val stationSettingsFlow: StateFlow<WeatherStationSettings> = _stationSettingsFlow
 
-    override suspend fun setTermsAccepted() {
+    override fun setTermsAccepted() {
         prefs.edit { putBoolean(KEY_TERMS, true) }
         _termsAcceptedFlow.value = true
     }
 
-    override suspend fun setTermsRejected() {
+    override fun setTermsRejected() {
         prefs.edit { putBoolean(KEY_TERMS, false) }
         _termsAcceptedFlow.value = false
     }
 
-    override suspend fun updateStationSettings(settings: WeatherStationSettings) {
+    override fun updateStationSettings(settings: WeatherStationSettings) {
         prefs.edit {
             putString(KEY_NAME, settings.displayName)
             putString(KEY_UID, settings.stationUid)

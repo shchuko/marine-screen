@@ -1,4 +1,4 @@
-package dev.shchuko.marinescreen.ui
+package dev.shchuko.marinescreen.ui.screens
 
 import android.content.res.Configuration
 import android.widget.Toast

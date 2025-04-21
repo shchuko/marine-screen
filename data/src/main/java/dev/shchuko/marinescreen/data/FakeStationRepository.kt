@@ -1,8 +1,8 @@
-package dev.shchuko.marinescreen.data.repository
+package dev.shchuko.marinescreen.data
 
 import dev.shchuko.marinescreen.domain.model.StationSnapshot
 import dev.shchuko.marinescreen.domain.model.WeatherSample
-import dev.shchuko.marinescreen.domain.repository.StationRepository
+import dev.shchuko.marinescreen.domain.StationRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.Clock

@@ -1,7 +1,6 @@
 package dev.shchuko.marinescreen.di
 
 import android.content.Context
-import com.example.domain.time.PreciseTimeProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,22 +9,18 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.shchuko.marinescreen.data.NtpClientImpl
 import javax.inject.Singleton
 import dev.shchuko.marinescreen.data.SettingsRepositoryImpl
-import dev.shchuko.marinescreen.data.repository.FakeStationRepository
-import dev.shchuko.marinescreen.data.usecase.AcceptTermsUseCaseImpl
-import dev.shchuko.marinescreen.data.usecase.ObserveStationSettingsUseCaseImpl
-import dev.shchuko.marinescreen.data.usecase.ObserveTermsAcceptedUseCaseImpl
-import dev.shchuko.marinescreen.data.usecase.ObserveWeatherStationSnapshotUseCaseImpl
-import dev.shchuko.marinescreen.data.usecase.RejectTermsUseCaseImpl
-import dev.shchuko.marinescreen.data.usecase.UpdateStationSettingsUseCaseImpl
-import dev.shchuko.marinescreen.domain.NtpClient
-import dev.shchuko.marinescreen.domain.SettingsRepository
-import dev.shchuko.marinescreen.domain.repository.StationRepository
+import dev.shchuko.marinescreen.data.FakeStationRepository
+import dev.shchuko.marinescreen.data.PreciseTimeProviderImpl
 import dev.shchuko.marinescreen.domain.usecase.AcceptTermsUseCase
 import dev.shchuko.marinescreen.domain.usecase.ObserveStationSettingsUseCase
 import dev.shchuko.marinescreen.domain.usecase.ObserveTermsAcceptedUseCase
 import dev.shchuko.marinescreen.domain.usecase.ObserveWeatherStationSnapshotUseCase
 import dev.shchuko.marinescreen.domain.usecase.RejectTermsUseCase
 import dev.shchuko.marinescreen.domain.usecase.UpdateStationSettingsUseCase
+import dev.shchuko.marinescreen.domain.NtpClient
+import dev.shchuko.marinescreen.domain.PreciseTimeProvider
+import dev.shchuko.marinescreen.domain.SettingsRepository
+import dev.shchuko.marinescreen.domain.StationRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
@@ -46,7 +41,7 @@ object AppModule {
     fun providePreciseTimeProvider(
         client: NtpClient,
         scope: CoroutineScope
-    ): PreciseTimeProvider = PreciseTimeProvider(client, scope)
+    ): PreciseTimeProvider = PreciseTimeProviderImpl(client, scope)
 
     @Provides
     @Singleton
@@ -64,35 +59,35 @@ object AppModule {
     @Singleton
     fun provideAcceptTermsUseCase(
         repo: SettingsRepository,
-    ): AcceptTermsUseCase = AcceptTermsUseCaseImpl(repo)
+    ): AcceptTermsUseCase = AcceptTermsUseCase(repo)
 
     @Provides
     @Singleton
     fun provideRejectTermsUseCase(
         repo: SettingsRepository,
-    ): RejectTermsUseCase = RejectTermsUseCaseImpl(repo)
+    ): RejectTermsUseCase = RejectTermsUseCase(repo)
 
     @Provides
     @Singleton
     fun provideObserveTermsAcceptedUseCase(
         repo: SettingsRepository,
-    ): ObserveTermsAcceptedUseCase = ObserveTermsAcceptedUseCaseImpl(repo)
+    ): ObserveTermsAcceptedUseCase = ObserveTermsAcceptedUseCase(repo)
 
     @Provides
     @Singleton
     fun provideObserveStationSnapshotUseCase(
         repo: StationRepository
-    ): ObserveWeatherStationSnapshotUseCase = ObserveWeatherStationSnapshotUseCaseImpl(repo)
+    ): ObserveWeatherStationSnapshotUseCase = ObserveWeatherStationSnapshotUseCase(repo)
 
     @Provides
     @Singleton
     fun provideObserveStationSettingsUseCase(
         repo: SettingsRepository
-    ): ObserveStationSettingsUseCase = ObserveStationSettingsUseCaseImpl(repo)
+    ): ObserveStationSettingsUseCase = ObserveStationSettingsUseCase(repo)
 
     @Provides
     @Singleton
     fun provideUpdateStationSettingsUseCase(
         repo: SettingsRepository
-    ): UpdateStationSettingsUseCase = UpdateStationSettingsUseCaseImpl(repo)
+    ): UpdateStationSettingsUseCase = UpdateStationSettingsUseCase(repo)
 }

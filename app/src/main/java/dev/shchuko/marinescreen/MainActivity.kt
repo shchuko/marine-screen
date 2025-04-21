@@ -37,7 +37,7 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.shchuko.marinescreen.ui.MainViewModel
 import dev.shchuko.marinescreen.ui.Screen
-import dev.shchuko.marinescreen.ui.SettingsScreen
+import dev.shchuko.marinescreen.ui.screens.SettingsScreen
 import dev.shchuko.marinescreen.ui.screens.TermsPopupContent
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant

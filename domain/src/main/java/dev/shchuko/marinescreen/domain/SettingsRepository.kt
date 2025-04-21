@@ -7,8 +7,8 @@ interface SettingsRepository {
     val termsAcceptedFlow: StateFlow<Boolean>
     val stationSettingsFlow: StateFlow<WeatherStationSettings>
 
-    suspend fun setTermsAccepted()
-    suspend fun setTermsRejected()
+    fun setTermsAccepted()
+    fun setTermsRejected()
 
-    suspend fun updateStationSettings(settings: WeatherStationSettings)
+    fun updateStationSettings(settings: WeatherStationSettings)
 }
