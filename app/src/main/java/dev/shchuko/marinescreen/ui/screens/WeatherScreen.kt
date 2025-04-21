@@ -211,9 +211,8 @@ internal fun WeatherScreen(
                         .fillMaxHeight()
                         .padding(bottom = 8.dp)
                 ) {
-                    Text(text = "Temp: ${measurements.current?.temperatureC.toTemperatureString()}", style = TextStyle(fontSize = fontSize3))
-                    Text(text = "Rh: ${measurements.current?.humidityPercent.toHumidityString()}", style = TextStyle(fontSize = fontSize3))
-                    Text(text = "Feels like ${null.toTemperatureString()}", style = TextStyle(fontSize = fontSize3))
+                    Text(text = "Temp: ${measurements.current?.temperatureC.toTemperatureString()}C (${measurements.current?.temperatureF.toTemperatureString()}F)", style = TextStyle(fontSize = fontSize3))
+                    Text(text = "RH: ${measurements.current?.humidityPercent.toHumidityString()}", style = TextStyle(fontSize = fontSize3))
                 }
             }
         }
@@ -234,7 +233,7 @@ fun Double?.toTemperatureString(): String = when {
     this > 0 -> "+${this.roundToInt()}"
     this < 0 -> "-${this.absoluteValue.roundToInt()}"
     else -> "0"
-} + "\u00B0C"
+} + "\u00B0"
 @Composable
 fun WindHistoryChart(
     modelProducer: CartesianChartModelProducer,

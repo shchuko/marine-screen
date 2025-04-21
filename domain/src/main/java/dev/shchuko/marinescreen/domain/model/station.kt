@@ -26,6 +26,7 @@ data class StationMeasurement(
 ) {
     val windSpeedMps: Double? = windSpeedKts?.times(0.514444f)
     val windGustMps: Double? = windGustKts?.times(0.514444f)
+    val temperatureF: Double? = temperatureC?.times(1.8f)?.plus(32)
 }
 
 
