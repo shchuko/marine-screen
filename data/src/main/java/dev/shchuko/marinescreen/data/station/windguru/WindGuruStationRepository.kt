@@ -13,6 +13,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.HttpRequestRetry
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
@@ -65,6 +66,11 @@ class WindGuruStationRepository(
         install(HttpRequestRetry) {
             retryOnExceptionOrServerErrors(maxRetries = 3)
             exponentialDelay()
+        }
+        install(HttpTimeout) {
+            connectTimeoutMillis = 5.seconds.inWholeMilliseconds
+            requestTimeoutMillis = 5.seconds.inWholeMilliseconds
+            socketTimeoutMillis = 5.seconds.inWholeMilliseconds
         }
     }
 
