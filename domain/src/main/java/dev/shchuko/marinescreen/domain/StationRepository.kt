@@ -1,9 +1,8 @@
 package dev.shchuko.marinescreen.domain
 
-import dev.shchuko.marinescreen.domain.model.StationSnapshot
+import dev.shchuko.marinescreen.domain.model.StationMeasurements
 import kotlinx.coroutines.flow.StateFlow
 
 interface StationRepository {
-    val station: StateFlow<StationSnapshot?>
-    suspend fun refresh()
+    val station: StateFlow<StationMeasurements>
 }

@@ -1,14 +1,14 @@
 package dev.shchuko.marinescreen.domain.model
 
-data class WeatherStationSettings(
-    val displayName: String,
-    val stationUid: String,
-    val stationPassword: String,
+data class WindGuruSettings(
+    val stationName: String,
+    val windGuruUid: String,
+    val windGuruPassword: String,
 ) {
     init {
         val settingsValid =
-            stationUid.isNotEmpty() && stationPassword.isNotEmpty()
-                || displayName.isEmpty() && stationUid.isEmpty() && stationPassword.isEmpty()
+            windGuruUid.isNotEmpty() && windGuruPassword.isNotEmpty()
+                || stationName.isEmpty() && windGuruUid.isEmpty() && windGuruPassword.isEmpty()
 
         if (!settingsValid) {
             throw InvalidSettingsException()
@@ -16,10 +16,10 @@ data class WeatherStationSettings(
     }
 
     companion object {
-        val NOT_SET = WeatherStationSettings(
-            displayName = "",
-            stationUid = "",
-            stationPassword = "",
+        val NOT_SET = WindGuruSettings(
+            stationName = "",
+            windGuruUid = "",
+            windGuruPassword = "",
         )
     }
 }

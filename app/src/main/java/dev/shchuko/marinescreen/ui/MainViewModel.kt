@@ -4,12 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.shchuko.marinescreen.domain.PreciseTimeProvider
-import dev.shchuko.marinescreen.domain.model.StationSnapshot
-import dev.shchuko.marinescreen.domain.model.WeatherStationSettings
-import dev.shchuko.marinescreen.domain.StationRepository
+import dev.shchuko.marinescreen.domain.model.WindGuruSettings
 import dev.shchuko.marinescreen.domain.usecase.AcceptTermsUseCase
 import dev.shchuko.marinescreen.domain.usecase.ObserveStationSettingsUseCase
 import dev.shchuko.marinescreen.domain.usecase.ObserveTermsAcceptedUseCase
+import dev.shchuko.marinescreen.domain.usecase.ObserveStationMeasurementsUseCase
 import dev.shchuko.marinescreen.domain.usecase.RejectTermsUseCase
 import dev.shchuko.marinescreen.domain.usecase.UpdateStationSettingsUseCase
 import kotlinx.coroutines.delay
@@ -27,8 +26,8 @@ class MainViewModel @Inject constructor(
     private val rejectTermsUseCase: RejectTermsUseCase,
     observeTermsAcceptedUseCase: ObserveTermsAcceptedUseCase,
     observeStationSettings: ObserveStationSettingsUseCase,
+    observeStationMeasurements: ObserveStationMeasurementsUseCase,
     private val updateStationSettings: UpdateStationSettingsUseCase,
-    private val stationRepository: StationRepository,
     private val timeProvider: PreciseTimeProvider,
 ) : ViewModel() {
 
@@ -36,7 +35,7 @@ class MainViewModel @Inject constructor(
     val time: StateFlow<String> = _time
 
     val termsAccepted = observeTermsAcceptedUseCase()
-    val stationSnapshot: StateFlow<StationSnapshot?> = stationRepository.station
+    val stationMeasurements = observeStationMeasurements()
     val stationSettings = observeStationSettings()
 
     init {
@@ -58,14 +57,8 @@ class MainViewModel @Inject constructor(
         rejectTermsUseCase()
     }
 
-    fun saveStationSettings(settings: WeatherStationSettings) {
+    fun saveStationSettings(settings: WindGuruSettings) {
         updateStationSettings(settings)
-    }
-
-    fun refreshStation() {
-        viewModelScope.launch {
-            stationRepository.refresh()
-        }
     }
 
     private fun formatLocalDateTime(dt: LocalDateTime): String {

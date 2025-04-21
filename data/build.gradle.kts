@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -38,6 +39,11 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.commons.net)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.core)
     implementation(libs.material)
     implementation(project(":domain"))
 

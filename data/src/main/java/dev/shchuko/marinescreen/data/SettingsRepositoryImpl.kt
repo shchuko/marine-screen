@@ -7,7 +7,7 @@ import android.content.Context
 import androidx.core.content.edit
 import dev.shchuko.marinescreen.domain.SettingsRepository
 import dev.shchuko.marinescreen.domain.model.InvalidSettingsException
-import dev.shchuko.marinescreen.domain.model.WeatherStationSettings
+import dev.shchuko.marinescreen.domain.model.WindGuruSettings
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -27,7 +27,7 @@ class SettingsRepositoryImpl(context: Context) : SettingsRepository {
     override val termsAcceptedFlow: StateFlow<Boolean> = _termsAcceptedFlow
 
     private val _stationSettingsFlow = MutableStateFlow(readStationSettings())
-    override val stationSettingsFlow: StateFlow<WeatherStationSettings> = _stationSettingsFlow
+    override val stationSettingsFlow: StateFlow<WindGuruSettings> = _stationSettingsFlow
 
     override fun setTermsAccepted() {
         prefs.edit { putBoolean(KEY_TERMS, true) }
@@ -39,23 +39,23 @@ class SettingsRepositoryImpl(context: Context) : SettingsRepository {
         _termsAcceptedFlow.value = false
     }
 
-    override fun updateStationSettings(settings: WeatherStationSettings) {
+    override fun updateStationSettings(settings: WindGuruSettings) {
         prefs.edit {
-            putString(KEY_NAME, settings.displayName)
-            putString(KEY_UID, settings.stationUid)
-            putString(KEY_PASSWORD, settings.stationPassword)
+            putString(KEY_NAME, settings.stationName)
+            putString(KEY_UID, settings.windGuruUid)
+            putString(KEY_PASSWORD, settings.windGuruPassword)
         }
         _stationSettingsFlow.value = readStationSettings()
     }
 
-    private fun readStationSettings(): WeatherStationSettings = try {
-        WeatherStationSettings(
-            displayName = prefs.getString(KEY_NAME, "") ?: "",
-            stationUid = prefs.getString(KEY_UID, "") ?: "",
-            stationPassword = prefs.getString(KEY_PASSWORD, "") ?: ""
+    private fun readStationSettings(): WindGuruSettings = try {
+        WindGuruSettings(
+            stationName = prefs.getString(KEY_NAME, "") ?: "",
+            windGuruUid = prefs.getString(KEY_UID, "") ?: "",
+            windGuruPassword = prefs.getString(KEY_PASSWORD, "") ?: ""
         )
     } catch (e: InvalidSettingsException) {
-        WeatherStationSettings.NOT_SET
+        WindGuruSettings.NOT_SET
     }
 }
 

@@ -43,7 +43,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.shchuko.marinescreen.R
-import dev.shchuko.marinescreen.domain.model.WeatherStationSettings
+import dev.shchuko.marinescreen.domain.model.WindGuruSettings
 import dev.shchuko.marinescreen.ui.tv.EditableOutlinedTextField
 import dev.shchuko.marinescreen.ui.tv.TvFocusableButton
 import dev.shchuko.marinescreen.ui.tv.TvFocusableTextButton
@@ -78,8 +78,8 @@ private enum class PasswordState(
     uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_TELEVISION,
 )
 fun SettingsScreen(
-    stationSettings: WeatherStationSettings = WeatherStationSettings.NOT_SET,
-    onSaveClick: (WeatherStationSettings) -> Unit = {},
+    stationSettings: WindGuruSettings = WindGuruSettings.NOT_SET,
+    onSaveClick: (WindGuruSettings) -> Unit = {},
     onTestConnection: (uid: String, password: String) -> Unit = { _, _ -> },
     onBackConfirmed: () -> Unit = {},
 ) {
@@ -88,13 +88,13 @@ fun SettingsScreen(
     val backButtonFocusRequester = remember { FocusRequester() }
     val revealPasswordButtonFocusRequester = remember { FocusRequester() }
 
-    var displayName by remember { mutableStateOf(stationSettings.displayName) }
-    var stationUid by remember { mutableStateOf(stationSettings.stationUid) }
+    var displayName by remember { mutableStateOf(stationSettings.stationName) }
+    var stationUid by remember { mutableStateOf(stationSettings.windGuruUid) }
 
     var password by remember { mutableStateOf("") }
     var passwordState by remember {
         mutableStateOf(
-            if (stationSettings.stationPassword.isNotEmpty()) PasswordState.REUSE_PASSWORD_FROM_SETTINGS
+            if (stationSettings.windGuruPassword.isNotEmpty()) PasswordState.REUSE_PASSWORD_FROM_SETTINGS
             else PasswordState.NORMAL
         )
     }
@@ -104,15 +104,15 @@ fun SettingsScreen(
 
     val effectivePasswordValue = when (passwordState) {
         PasswordState.NORMAL -> password
-        PasswordState.REUSE_PASSWORD_FROM_SETTINGS -> stationSettings.stationPassword
+        PasswordState.REUSE_PASSWORD_FROM_SETTINGS -> stationSettings.windGuruPassword
     }
     val stationUidSet = stationUid.isNotEmpty()
     val passwordSet = effectivePasswordValue.isNotEmpty()
     val requiredSettingsSet = passwordSet && stationUidSet
 
     val settingsModified =
-        displayName != stationSettings.displayName
-                || stationUid != stationSettings.stationUid
+        displayName != stationSettings.stationName
+                || stationUid != stationSettings.windGuruUid
                 || passwordModified
 
     var showExitConfirmation by remember { mutableStateOf(false) }
@@ -273,10 +273,10 @@ fun SettingsScreen(
                 focusable = requiredSettingsSet && settingsModified,
                 onClick = {
                     onSaveClick(
-                        WeatherStationSettings(
-                            displayName = displayName,
-                            stationUid = stationUid,
-                            stationPassword = effectivePasswordValue,
+                        WindGuruSettings(
+                            stationName = displayName,
+                            windGuruUid = stationUid,
+                            windGuruPassword = effectivePasswordValue,
                         )
                     )
                     Toast.makeText(context, "Setting saved", Toast.LENGTH_SHORT).show()

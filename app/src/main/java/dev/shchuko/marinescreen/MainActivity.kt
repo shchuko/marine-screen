@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
 
             val viewModel = hiltViewModel<MainViewModel>()
             val termsAccepted: Boolean by viewModel.termsAccepted.collectAsState()
-            val stationSnapshot by viewModel.stationSnapshot.collectAsState()
+            val stationSnapshot by viewModel.stationMeasurements.collectAsState()
             val time by viewModel.time.collectAsState()
             val settings by viewModel.stationSettings.collectAsState()
 
@@ -79,10 +79,10 @@ class MainActivity : ComponentActivity() {
                     )
                 }
                 composable(Screen.Weather.route) {
-                    stationSnapshot?.let { snapshot ->
+                    stationSnapshot.let { snapshot ->
                         WeatherScreenStub(
                             time = time,
-                            stationName = snapshot.stationName,
+                            stationName = settings.stationName,
                             wind = snapshot.current?.windSpeedKts,
                             windDir = snapshot.current?.windDirectionDeg,
                             temperatureC = snapshot.current?.temperatureC,
@@ -91,8 +91,6 @@ class MainActivity : ComponentActivity() {
                             updatedAt = snapshot.lastUpdatedAt,
                             onSettingsClick = { navController.navigate(Screen.Settings.route) }
                         )
-                    } ?: Box(Modifier.fillMaxSize()) {
-                        Text("Loading...")
                     }
                 }
 
@@ -116,16 +114,16 @@ class MainActivity : ComponentActivity() {
 fun WeatherScreenStub(
     time: String,
     stationName: String,
-    wind: Float?,
+    wind: Double?,
     windDir: Int?,
-    temperatureC: Float?,
-    temperatureF: Float?,
+    temperatureC: Double?,
+    temperatureF: Double?,
     humidity: Int?,
-    updatedAt: Instant,
+    updatedAt: Instant?,
     onSettingsClick: () -> Unit = {},
     onWarningClick: () -> Unit = {}
 ) {
-    val updatedAgo = remember(updatedAt) { updatedAt.formatAgo() }
+    val updatedAgo = remember(updatedAt) { updatedAt?.formatAgo() ?: "Never" }
 
     Box(
         modifier = Modifier
