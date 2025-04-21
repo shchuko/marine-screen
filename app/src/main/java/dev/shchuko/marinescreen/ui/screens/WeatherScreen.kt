@@ -274,7 +274,7 @@ fun WindHistoryChart(
             Color(defaultColors.textColor),
         )
 
-    ProvideVicoTheme(fromDefaultColors1(Dark)) {
+    ProvideVicoTheme(fromDefaultColors1(Light)) {
         CartesianChartHost(
             rememberCartesianChart(
                 rememberLineCartesianLayer(
