@@ -133,7 +133,7 @@ internal fun WeatherScreen(
                     verticalAlignment = Alignment.Bottom,
                 ) {
                     Text(
-                        "github.com/shchuko/weather-station-screen",
+                        "github.com/shchuko/marine-screen",
                         style = TextStyle(fontSize = 16.textDp)
                     )
                     Text("Updated ${measurements.lastUpdatedAt?.let { updatedAt -> time.time.minus(updatedAt).inWholeMinutes} ?: "--"} min ago", style = TextStyle(fontSize = 16.textDp))
