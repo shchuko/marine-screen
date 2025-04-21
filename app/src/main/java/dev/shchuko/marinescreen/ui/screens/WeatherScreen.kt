@@ -1,14 +1,11 @@
 package dev.shchuko.marinescreen.ui.screens
 
-import android.graphics.Mesh
 import android.graphics.Typeface
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -66,13 +63,9 @@ import com.patrykandpatrick.vico.core.scroll.Scroll
 import com.patrykandpatrick.vico.core.zoom.Zoom
 import dev.shchuko.marinescreen.R
 import dev.shchuko.marinescreen.domain.model.PreciseTime
-import dev.shchuko.marinescreen.domain.model.PreciseTimeStatus
 import dev.shchuko.marinescreen.domain.model.StationMeasurement
 import dev.shchuko.marinescreen.domain.model.StationMeasurements
 import dev.shchuko.marinescreen.ui.tv.TvFocusableTextButton
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlin.math.absoluteValue
