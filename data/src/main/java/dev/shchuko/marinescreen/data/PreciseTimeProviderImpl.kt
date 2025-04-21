@@ -1,5 +1,6 @@
 package dev.shchuko.marinescreen.data
 
+import android.util.Log
 import dev.shchuko.marinescreen.domain.model.PreciseTime
 import dev.shchuko.marinescreen.domain.NtpClient
 import dev.shchuko.marinescreen.domain.PreciseTimeProvider
@@ -22,6 +23,10 @@ class PreciseTimeProviderImpl(
     private val ntpStaleThreshold: Duration = 5.minutes,
     private val systemTimeDriftWarningThreshold: Duration = 5.minutes,
 ) : PreciseTimeProvider {
+    companion object {
+        private const val LOG_TAG = "PreciseTimeProvider"
+    }
+
     private data class NtpTimeSnapshot(val ntpTime: Instant, val nanoTime: Long)
 
     @Volatile
@@ -29,19 +34,27 @@ class PreciseTimeProviderImpl(
 
     init {
         coroutineScope.launch {
+            Log.d(LOG_TAG, "Starting ntp refresh loop")
             var retryDelay = ntpRefreshErrorRetryInitialDelay
             while (isActive) {
+                Log.d(LOG_TAG, "Starting next ntp refresh loop iteration")
+
                 val success = try {
-                    snapshot = NtpTimeSnapshot(provider.getCurrent(), System.nanoTime())
+                    val ntpTime = NtpTimeSnapshot(provider.getCurrent(), System.nanoTime())
+                    snapshot = ntpTime
+                    Log.d(LOG_TAG, "NTP refresh OK, ntp=${ntpTime.ntpTime} system=${Clock.System.now()} systemNano=${System.nanoTime()}")
                     true
                 } catch (e: Exception) {
+                    Log.d(LOG_TAG, "NTP refresh error", e)
                     false
                 }
 
                 if (success) {
                     retryDelay = ntpRefreshErrorRetryInitialDelay
+                    Log.d(LOG_TAG, "NTP refresh successful, retrying in $ntpRefreshInterval")
                     delay(ntpRefreshInterval)
                 } else {
+                    Log.d(LOG_TAG, "NTP refresh failed, retrying in $retryDelay")
                     delay(retryDelay)
                     val jitter = Random.nextDouble(0.85, 1.15)
                     retryDelay = (retryDelay * 2 * jitter).coerceAtMost(ntpRefreshErrorRetryMaxDelay)
