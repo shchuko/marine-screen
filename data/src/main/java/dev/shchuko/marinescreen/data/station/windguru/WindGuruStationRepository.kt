@@ -1,5 +1,6 @@
 package dev.shchuko.marinescreen.data.station.windguru
 
+import android.util.Log
 import dev.shchuko.marinescreen.domain.PreciseTimeProvider
 import dev.shchuko.marinescreen.domain.SettingsRepository
 import dev.shchuko.marinescreen.domain.StationRepository
@@ -46,6 +47,10 @@ class WindGuruStationRepository(
     private val refreshInterval: Duration = 1.minutes,
     private val currentMeasurementMaxAge: Duration = 5.minutes,
 ) : StationRepository {
+    companion object {
+        private val LOG_TAG = "WindGuruStation"
+    }
+
     private val measurementUpdateMutex = Mutex()
     private val _measurements = MutableStateFlow(StationMeasurements())
     override val station: StateFlow<StationMeasurements> = _measurements
@@ -74,9 +79,12 @@ class WindGuruStationRepository(
     private suspend fun runRefreshLoop(
         settings: WindGuruSettings
     ) = coroutineScope {
+        Log.d(LOG_TAG, "Starting refresh loop uid=${settings.windGuruUid}")
+
         _measurements.value = StationMeasurements()
 
         while (isActive) {
+            Log.d(LOG_TAG, "Starting next refresh loop cycle uid=${settings.windGuruUid}")
             val prevMeasurements = _measurements.value
 
             val now = preciseTimeProvider.getCurrent().time
@@ -107,6 +115,7 @@ class WindGuruStationRepository(
                 null
             }
 
+            Log.d(LOG_TAG, "Fetch done uid=${settings.windGuruUid} old=${prevMeasurements.historical.size} new=${fetchResult?.size} errorKind=${error?.kind} errorMessage=${error?.message}")
             val merged = mergeMeasurements(
                 from = timeWindowStart,
                 to = now,
@@ -114,14 +123,19 @@ class WindGuruStationRepository(
                 new = fetchResult ?: emptyList(),
             )
 
+            Log.d(LOG_TAG, "Measurements merge done uid=${settings.windGuruUid} size=${merged.size}")
+
             // Only one (the latest) Flow.collectLatest {} wins and updates the state
             measurementUpdateMutex.withLock {
+                Log.d(LOG_TAG, "Updating state uid=${settings.windGuruUid} size=${merged.size}")
                 _measurements.value = StationMeasurements(
                     current = getCurrentMeasurement(merged, now),
                     historical = merged,
                     error = error,
                     lastUpdatedAt = now,
                 )
+                Log.d(LOG_TAG, "Update state done uid=${settings.windGuruUid} size=${merged.size}")
+
             }
             delay(refreshInterval)
         }
@@ -129,7 +143,9 @@ class WindGuruStationRepository(
         while (isActive) {
             measurementUpdateMutex.withLock {
                 val currentValue = _measurements.value
-                if (currentValue.current?.canBeCurrent(preciseTimeProvider.getCurrent().time) == false) {
+                val now = preciseTimeProvider.getCurrent().time
+                if (currentValue.current?.canBeCurrent(now) == false) {
+                    Log.d(LOG_TAG, "Resetting 'current' measurement uid=${settings.windGuruUid} current=${currentValue.current?.timestamp} now=$now")
                     _measurements.value = currentValue.copy(current = null)
                 }
             }
@@ -182,6 +198,8 @@ class WindGuruStationRepository(
         to: Instant,
         intervalMinutes: Int = 1
     ): List<StationMeasurement> = try {
+        Log.d(LOG_TAG, "Fetching WindGuru data uid=${stationUid} from=${from} to=${to} interval=${intervalMinutes}")
+
         val response = httpClient.get {
             url("https://www.windguru.cz/int/wgsapi.php")
             parameter("uid", stationUid)
@@ -205,20 +223,38 @@ class WindGuruStationRepository(
 
         val bodyString = response.body<String>()
         if (response.status.isSuccess()) {
-            decodeWindGuruResponse<WindGuruMeasurementsResponseDto>(bodyString).toModel()
+            Log.d(LOG_TAG, "WindGuru data fetch OK, parsing body uid=${stationUid}")
+            val parsed = parseWindGuruResponse<WindGuruMeasurementsResponseDto>(bodyString)
+            val measurements = parsed.toModel()
+            Log.d(
+                LOG_TAG,
+                "WindGuru data fetch OK, body parsed uid=${stationUid} measurements=${measurements.size}"
+            )
+            measurements
         } else {
-            throw decodeWindGuruResponse<WindGuruErrorResponseDto>(bodyString).toThrowable()
+            Log.d(LOG_TAG, "WindGuru data fetch failed, parsing error uid=${stationUid}")
+            val parsed = parseWindGuruResponse<WindGuruErrorResponseDto>(bodyString)
+            val throwable = parsed.toThrowable()
+            Log.d(
+                LOG_TAG,
+                "WindGuru data fetch failed, error parsed uid=${stationUid} kind=${throwable.kind} message=${throwable.message}"
+            )
+            throw throwable
         }
     } catch (ce: CancellationException) {
         throw ce
+    } catch (e: StationError) {
+        throw e
     } catch (e: IOException) {
+        Log.d(LOG_TAG, "WindGuru data fetch failed, IOException uid=${stationUid}", e)
         throw StationError(StationErrorKind.CONNECTION_ERROR, cause = e)
     } catch (e: Exception) {
+        Log.d(LOG_TAG, "WindGuru data fetch failed, unknown exception uid=${stationUid}", e)
         throw StationError(StationErrorKind.INTERNAL_ERROR, cause = e)
     }
 
     // WindGuru may respond with empty list [] instead of empty json {}
-    private inline fun <reified T> decodeWindGuruResponse(response: String): T =
+    private inline fun <reified T> parseWindGuruResponse(response: String): T =
         relaxedJson.decodeFromString<T>(if (response == "[]") "{}" else response)
 
     private fun WindGuruErrorResponseDto.toThrowable() = StationError(
