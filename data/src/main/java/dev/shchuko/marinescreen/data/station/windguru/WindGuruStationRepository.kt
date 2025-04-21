@@ -46,7 +46,7 @@ class WindGuruStationRepository(
     private val preciseTimeProvider: PreciseTimeProvider,
     private val timeWindow: Duration = 4.hours,
     private val refreshInterval: Duration = 1.minutes,
-    private val currentMeasurementMaxAge: Duration = 5.minutes,
+    private val currentMeasurementMaxAge: Duration = 3.minutes,
 ) : StationRepository {
     companion object {
         private const val LOG_TAG = "WindGuruStation"
