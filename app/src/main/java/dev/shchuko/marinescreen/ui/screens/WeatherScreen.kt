@@ -65,6 +65,7 @@ import dev.shchuko.marinescreen.R
 import dev.shchuko.marinescreen.domain.model.PreciseTime
 import dev.shchuko.marinescreen.domain.model.StationMeasurement
 import dev.shchuko.marinescreen.domain.model.StationMeasurements
+import dev.shchuko.marinescreen.ui.tv.KeepScreenOn
 import dev.shchuko.marinescreen.ui.tv.TvFocusableTextButton
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
@@ -81,6 +82,8 @@ internal fun WeatherScreen(
     measurements: StationMeasurements,
     onSettingsClick: () -> Unit = {},
 ) {
+    KeepScreenOn()
+
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val windGraphModelProducer = remember { CartesianChartModelProducer.build() }
     LaunchedEffect(measurements.historical, firstNtpSyncDone) {
