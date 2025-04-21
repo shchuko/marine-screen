@@ -67,6 +67,7 @@ import com.patrykandpatrick.vico.core.zoom.Zoom
 import dev.shchuko.marinescreen.R
 import dev.shchuko.marinescreen.domain.model.PreciseTime
 import dev.shchuko.marinescreen.domain.model.PreciseTimeStatus
+import dev.shchuko.marinescreen.domain.model.StationMeasurement
 import dev.shchuko.marinescreen.domain.model.StationMeasurements
 import dev.shchuko.marinescreen.ui.tv.TvFocusableTextButton
 import kotlinx.coroutines.delay
@@ -89,8 +90,8 @@ internal fun WeatherScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val windGraphModelProducer = remember { CartesianChartModelProducer.build() }
-    LaunchedEffect(measurements, firstNtpSyncDone) {
-        updateGraphModel(windGraphModelProducer, time.time, measurements)
+    LaunchedEffect(measurements.historical, firstNtpSyncDone) {
+        updateGraphModel(windGraphModelProducer, time.time, measurements.historical)
     }
 
     Scaffold(
@@ -133,7 +134,7 @@ internal fun WeatherScreen(
                     verticalAlignment = Alignment.Bottom,
                 ) {
                     Text(
-                        "github.com/shchuko/marine-screen",
+                        "marine-screen.shchuko.dev",
                         style = TextStyle(fontSize = 16.textDp)
                     )
                     Text("Updated ${measurements.lastUpdatedAt?.let { updatedAt -> time.time.minus(updatedAt).inWholeMinutes} ?: "--"} min ago", style = TextStyle(fontSize = 16.textDp))
@@ -193,7 +194,7 @@ internal fun WeatherScreen(
 
                 WindHistoryChart(
                     modelProducer = windGraphModelProducer,
-                    hoursDepth = 6,
+                    hoursDepth = 4,
                     modifier = Modifier
                         .padding(16.dp)
                         .weight(7f)
@@ -382,15 +383,15 @@ fun clearGraph(modelProducer: CartesianChartModelProducer) {
 fun updateGraphModel(
     modelProducer: CartesianChartModelProducer,
     now: Instant,
-    measurements: StationMeasurements,
+    measurements: List<StationMeasurement>,
 ) {
-    val wind = measurements.historical.mapNotNull {
+    val wind = measurements.mapNotNull {
         WindDataPoint(
             timestamp = it.timestamp,
             knots = it.windSpeedKts ?: return@mapNotNull null
         )
     }
-    val gust = measurements.historical.mapNotNull {
+    val gust = measurements.mapNotNull {
         WindDataPoint(
             timestamp = it.timestamp,
             knots = it.windGustKts ?: return@mapNotNull null
