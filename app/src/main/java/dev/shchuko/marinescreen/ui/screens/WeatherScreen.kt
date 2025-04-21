@@ -464,8 +464,7 @@ private fun formatLocalDateTime(dt: LocalDateTime): String {
     val year = dt.date.year
     val hour = dt.hour.toString().padStart(2, '0')
     val minute = dt.minute.toString().padStart(2, '0')
-    val second = dt.second.toString().padStart(2, '0')
-    return "$day/$month/$year $hour:$minute:$second"
+    return "$day/$month/$year $hour:$minute"
 }
 
 
