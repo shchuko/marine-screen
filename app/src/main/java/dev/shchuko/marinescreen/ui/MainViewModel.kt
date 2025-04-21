@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.shchuko.marinescreen.domain.PreciseTimeProvider
-import dev.shchuko.marinescreen.domain.SettingsRepository
 import dev.shchuko.marinescreen.domain.model.StationSnapshot
 import dev.shchuko.marinescreen.domain.model.WeatherStationSettings
 import dev.shchuko.marinescreen.domain.StationRepository
@@ -43,7 +42,7 @@ class MainViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             while (true) {
-                val instant = timeProvider.getCurrent().ntpTime ?: timeProvider.getCurrent().systemTime
+                val instant = timeProvider.getCurrent().time
                 val local = instant.toLocalDateTime(TimeZone.currentSystemDefault())
                 _time.value = formatLocalDateTime(local)
                 delay(1000)

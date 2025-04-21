@@ -1,26 +1,22 @@
 package dev.shchuko.marinescreen.domain.model
 
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.time.Duration
 
-data class TimeDetails(
+data class PreciseTime(
+    val status: PreciseTimeStatus,
     val ntpTime: Instant?,
     val ntpLastUpdated: Duration?,
-    val ntpStale: Boolean?,
 
     val systemTime: Instant,
-    val systemTimeDrift: Duration?,
-    val systemTimeDriftWarning: Boolean?,
 ) {
-    companion object {
-        fun systemOnly(): TimeDetails = TimeDetails(
-            ntpTime = null,
-            ntpLastUpdated = null,
-            ntpStale = null,
-            systemTime = Clock.System.now(),
-            systemTimeDrift = null,
-            systemTimeDriftWarning = null,
-        )
-    }
+    val time: Instant = ntpTime ?: systemTime
+}
+
+enum class PreciseTimeStatus {
+    OK,
+    SYSTEM_TIME_DRIFT_WARNING,
+    SYSTEM_TIME_ONLY,
+    NTP_STALE,
+    ;
 }
