@@ -6,6 +6,8 @@ import dev.shchuko.marinescreen.domain.NtpClient
 import dev.shchuko.marinescreen.domain.PreciseTimeProvider
 import dev.shchuko.marinescreen.domain.model.PreciseTimeStatus
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.random.Random
@@ -32,6 +34,9 @@ class PreciseTimeProviderImpl(
     @Volatile
     private var snapshot: NtpTimeSnapshot? = null
 
+    private val _statusChangeFlow = MutableStateFlow(false)
+    override val firstNtpSyncDone: StateFlow<Boolean> = _statusChangeFlow
+
     init {
         coroutineScope.launch {
             Log.d(LOG_TAG, "Starting ntp refresh loop")
@@ -41,8 +46,12 @@ class PreciseTimeProviderImpl(
 
                 val success = try {
                     val ntpTime = NtpTimeSnapshot(provider.getCurrent(), System.nanoTime())
+                    val firstNtpSync = snapshot == null
                     snapshot = ntpTime
-                    Log.d(LOG_TAG, "NTP refresh OK, ntp=${ntpTime.ntpTime} system=${Clock.System.now()} systemNano=${System.nanoTime()}")
+                    if (firstNtpSync) {
+                        _statusChangeFlow.value = true
+                    }
+                    Log.d(LOG_TAG, "NTP refresh OK, ntp=${ntpTime.ntpTime} system=${Clock.System.now()} systemNano=${System.nanoTime()} firstNtpSync=${firstNtpSync}")
                     true
                 } catch (e: Exception) {
                     Log.d(LOG_TAG, "NTP refresh error", e)

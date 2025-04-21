@@ -1,6 +1,9 @@
 package dev.shchuko.marinescreen.domain.model
 
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration
 
 data class PreciseTime(
@@ -11,6 +14,7 @@ data class PreciseTime(
     val systemTime: Instant,
 ) {
     val time: Instant = ntpTime ?: systemTime
+    val localTime: LocalDateTime = time.toLocalDateTime(TimeZone.currentSystemDefault())
 }
 
 enum class PreciseTimeStatus {

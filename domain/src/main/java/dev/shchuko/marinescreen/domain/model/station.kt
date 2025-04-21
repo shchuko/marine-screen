@@ -9,6 +9,7 @@ import kotlin.math.sin
 import kotlin.time.Duration.Companion.minutes
 
 data class StationMeasurements(
+    val stationName: String? = null,
     val current: StationMeasurement? = null,
     val historical: List<StationMeasurement> = emptyList(),
     val error: StationError? = null,
@@ -24,8 +25,7 @@ data class StationMeasurement(
     val humidityPercent: Int?,
 ) {
     val windSpeedMps: Double? = windSpeedKts?.times(0.514444f)
-    val windGustMps: Double? = windSpeedKts?.times(0.514444f)
-    val temperatureF: Double? = temperatureC?.let { it * 9 / 5 + 32 }
+    val windGustMps: Double? = windGustKts?.times(0.514444f)
 }
 
 

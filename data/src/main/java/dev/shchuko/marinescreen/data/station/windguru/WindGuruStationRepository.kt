@@ -77,7 +77,9 @@ class WindGuruStationRepository(
     init {
         coroutineScope.launch {
             settingsRepository.stationSettingsFlow.collectLatest { settings ->
-                runRefreshLoop(settings)
+                preciseTimeProvider.firstNtpSyncDone.collectLatest {
+                    runRefreshLoop(settings)
+                }
             }
         }
     }
@@ -87,7 +89,7 @@ class WindGuruStationRepository(
     ) = coroutineScope {
         Log.d(LOG_TAG, "Starting refresh loop uid=${settings.windGuruUid}")
 
-        _measurements.value = StationMeasurements()
+        _measurements.value = StationMeasurements(stationName = settings.stationName)
 
         while (isActive) {
             Log.d(LOG_TAG, "Starting next refresh loop cycle uid=${settings.windGuruUid}")
@@ -121,7 +123,10 @@ class WindGuruStationRepository(
                 null
             }
 
-            Log.d(LOG_TAG, "Fetch done uid=${settings.windGuruUid} old=${prevMeasurements.historical.size} new=${fetchResult?.size} errorKind=${error?.kind} errorMessage=${error?.message}")
+            Log.d(
+                LOG_TAG,
+                "Fetch done uid=${settings.windGuruUid} old=${prevMeasurements.historical.size} new=${fetchResult?.size} errorKind=${error?.kind} errorMessage=${error?.message}"
+            )
             val merged = mergeMeasurements(
                 from = timeWindowStart,
                 to = now,
@@ -129,12 +134,16 @@ class WindGuruStationRepository(
                 new = fetchResult ?: emptyList(),
             )
 
-            Log.d(LOG_TAG, "Measurements merge done uid=${settings.windGuruUid} size=${merged.size}")
+            Log.d(
+                LOG_TAG,
+                "Measurements merge done uid=${settings.windGuruUid} size=${merged.size}"
+            )
 
             // Only one (the latest) Flow.collectLatest {} wins and updates the state
             measurementUpdateMutex.withLock {
                 Log.d(LOG_TAG, "Updating state uid=${settings.windGuruUid} size=${merged.size}")
                 _measurements.value = StationMeasurements(
+                    stationName = settings.stationName,
                     current = getCurrentMeasurement(merged, now),
                     historical = merged,
                     error = error,
@@ -151,7 +160,10 @@ class WindGuruStationRepository(
                 val currentValue = _measurements.value
                 val now = preciseTimeProvider.getCurrent().time
                 if (currentValue.current?.canBeCurrent(now) == false) {
-                    Log.d(LOG_TAG, "Resetting 'current' measurement uid=${settings.windGuruUid} current=${currentValue.current?.timestamp} now=$now")
+                    Log.d(
+                        LOG_TAG,
+                        "Resetting 'current' measurement uid=${settings.windGuruUid} current=${currentValue.current?.timestamp} now=$now"
+                    )
                     _measurements.value = currentValue.copy(current = null)
                 }
             }
@@ -190,7 +202,10 @@ class WindGuruStationRepository(
         return result
     }
 
-    private fun getCurrentMeasurement(measurements: List<StationMeasurement>, now: Instant): StationMeasurement? =
+    private fun getCurrentMeasurement(
+        measurements: List<StationMeasurement>,
+        now: Instant
+    ): StationMeasurement? =
         measurements.maxByOrNull { it.timestamp }?.takeIf { it.canBeCurrent(now) }
 
     private fun StationMeasurement.canBeCurrent(now: Instant): Boolean =
@@ -204,7 +219,10 @@ class WindGuruStationRepository(
         to: Instant,
         intervalMinutes: Int = 1
     ): List<StationMeasurement> = try {
-        Log.d(LOG_TAG, "Fetching WindGuru data uid=${stationUid} from=${from} to=${to} interval=${intervalMinutes}")
+        Log.d(
+            LOG_TAG,
+            "Fetching WindGuru data uid=${stationUid} from=${from} to=${to} interval=${intervalMinutes}"
+        )
 
         val response = httpClient.get {
             url("https://www.windguru.cz/int/wgsapi.php")

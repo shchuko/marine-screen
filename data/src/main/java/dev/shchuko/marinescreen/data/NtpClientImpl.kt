@@ -10,7 +10,6 @@ import java.net.InetAddress
 
 class NtpClientImpl : NtpClient {
     private val addresses = listOf(
-        "pool.ntp.org",
         "time.google.com",
         "time.windows.com",
     )

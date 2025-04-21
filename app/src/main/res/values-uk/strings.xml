@@ -9,6 +9,7 @@
     <string name="button_prev">Назад</string>
     <string name="button_reveal_password">Показати пароль</string>
     <string name="button_save">Зберегти</string>
+    <string name="button_settings">Налаштування</string>
     <string name="button_test_connection">Перевірити з’єднання</string>
     <string name="display_name_label">Назва станції (залиште порожнім, щоб використовувати стандартне)</string>
     <string name="display_name_placeholder">Наприклад: Севан</string>
