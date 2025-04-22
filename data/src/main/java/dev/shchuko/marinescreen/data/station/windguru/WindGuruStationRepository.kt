@@ -330,7 +330,7 @@ class WindGuruStationRepository(
 
     @Serializable
     private data class WindGuruErrorResponseDto(
-        @SerialName("error_message")
+        @SerialName("message")
         val errorMessage: String? = null,
     )
 
