@@ -6,9 +6,12 @@ import kotlinx.coroutines.flow.StateFlow
 interface SettingsRepository {
     val termsAcceptedFlow: StateFlow<Boolean>
     val stationSettingsFlow: StateFlow<WindGuruSettings>
+    val screenScaleFlow: StateFlow<Float>
 
     fun setTermsAccepted()
     fun setTermsRejected()
 
     fun updateStationSettings(settings: WindGuruSettings)
+
+    fun updateScreenScale(scale: Float)
 }

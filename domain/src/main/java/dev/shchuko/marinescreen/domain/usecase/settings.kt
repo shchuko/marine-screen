@@ -17,3 +17,17 @@ class UpdateStationSettingsUseCase(
         repo.updateStationSettings(newSettings)
     }
 }
+
+class ObserveScreenScaleSettingUseCase(
+    private val repo: SettingsRepository,
+) {
+    operator fun invoke(): StateFlow<Float> = repo.screenScaleFlow
+}
+
+class UpdateScreenScaleSettingUseCase(
+    private val repo: SettingsRepository
+) {
+    operator fun invoke(newScale: Float) {
+        repo.updateScreenScale(newScale)
+    }
+}

@@ -19,6 +19,7 @@ class SettingsRepositoryImpl(context: Context) : SettingsRepository {
         private const val KEY_NAME = "station_name"
         private const val KEY_UID = "station_uid"
         private const val KEY_PASSWORD = "station_password"
+        private const val KEY_SCREEN_SCALE = "screen_scale"
     }
 
     private val prefs = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
@@ -28,6 +29,9 @@ class SettingsRepositoryImpl(context: Context) : SettingsRepository {
 
     private val _stationSettingsFlow = MutableStateFlow(readStationSettings())
     override val stationSettingsFlow: StateFlow<WindGuruSettings> = _stationSettingsFlow
+
+    private val _screenScaleFlow = MutableStateFlow(readScreenScale())
+    override val screenScaleFlow: StateFlow<Float> = _screenScaleFlow
 
     override fun setTermsAccepted() {
         prefs.edit { putBoolean(KEY_TERMS, true) }
@@ -48,6 +52,13 @@ class SettingsRepositoryImpl(context: Context) : SettingsRepository {
         _stationSettingsFlow.value = readStationSettings()
     }
 
+    override fun updateScreenScale(scale: Float) {
+        prefs.edit {
+            putFloat(KEY_SCREEN_SCALE, scale)
+        }
+        _screenScaleFlow.value = readScreenScale()
+    }
+
     private fun readStationSettings(): WindGuruSettings = try {
         WindGuruSettings(
             stationName = prefs.getString(KEY_NAME, "") ?: "",
@@ -57,5 +68,7 @@ class SettingsRepositoryImpl(context: Context) : SettingsRepository {
     } catch (e: InvalidSettingsException) {
         WindGuruSettings.NOT_SET
     }
+
+    private fun readScreenScale(): Float = prefs.getFloat(KEY_SCREEN_SCALE, 100f)
 }
 

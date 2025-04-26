@@ -21,6 +21,8 @@ import dev.shchuko.marinescreen.domain.NtpClient
 import dev.shchuko.marinescreen.domain.PreciseTimeProvider
 import dev.shchuko.marinescreen.domain.SettingsRepository
 import dev.shchuko.marinescreen.domain.StationRepository
+import dev.shchuko.marinescreen.domain.usecase.ObserveScreenScaleSettingUseCase
+import dev.shchuko.marinescreen.domain.usecase.UpdateScreenScaleSettingUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
@@ -96,4 +98,19 @@ object AppModule {
     fun provideUpdateStationSettingsUseCase(
         repo: SettingsRepository
     ): UpdateStationSettingsUseCase = UpdateStationSettingsUseCase(repo)
+
+
+    @Provides
+    @Singleton
+    fun provideObserveScreenScaleSettingUseCase(
+        repo: SettingsRepository
+    ): ObserveScreenScaleSettingUseCase = ObserveScreenScaleSettingUseCase(repo)
+
+
+    @Provides
+    @Singleton
+    fun provideUpdateScreenScaleSettingUseCase(
+        repo: SettingsRepository
+    ): UpdateScreenScaleSettingUseCase = UpdateScreenScaleSettingUseCase(repo)
+
 }

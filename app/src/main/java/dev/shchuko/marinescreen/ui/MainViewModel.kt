@@ -7,10 +7,12 @@ import dev.shchuko.marinescreen.domain.PreciseTimeProvider
 import dev.shchuko.marinescreen.domain.model.PreciseTime
 import dev.shchuko.marinescreen.domain.model.WindGuruSettings
 import dev.shchuko.marinescreen.domain.usecase.AcceptTermsUseCase
+import dev.shchuko.marinescreen.domain.usecase.ObserveScreenScaleSettingUseCase
 import dev.shchuko.marinescreen.domain.usecase.ObserveStationMeasurementsUseCase
 import dev.shchuko.marinescreen.domain.usecase.ObserveStationSettingsUseCase
 import dev.shchuko.marinescreen.domain.usecase.ObserveTermsAcceptedUseCase
 import dev.shchuko.marinescreen.domain.usecase.RejectTermsUseCase
+import dev.shchuko.marinescreen.domain.usecase.UpdateScreenScaleSettingUseCase
 import dev.shchuko.marinescreen.domain.usecase.UpdateStationSettingsUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +30,8 @@ class MainViewModel @Inject constructor(
     observeStationSettings: ObserveStationSettingsUseCase,
     observeStationMeasurements: ObserveStationMeasurementsUseCase,
     private val updateStationSettings: UpdateStationSettingsUseCase,
+    observeScreenScaleSettingUseCase: ObserveScreenScaleSettingUseCase,
+    private val updateScreenScaleSettingUseCase: UpdateScreenScaleSettingUseCase,
     private val timeProvider: PreciseTimeProvider,
 ) : ViewModel() {
 
@@ -38,6 +42,7 @@ class MainViewModel @Inject constructor(
     val termsAccepted = observeTermsAcceptedUseCase()
     val stationMeasurements = observeStationMeasurements()
     val stationSettings = observeStationSettings()
+    val screenScale = observeScreenScaleSettingUseCase()
 
     init {
         viewModelScope.launch {
@@ -60,5 +65,9 @@ class MainViewModel @Inject constructor(
 
     fun saveStationSettings(settings: WindGuruSettings) {
         updateStationSettings(settings)
+    }
+
+    fun saveScreenScaleSetting(scale: Float) {
+        updateScreenScaleSettingUseCase(scale)
     }
 }

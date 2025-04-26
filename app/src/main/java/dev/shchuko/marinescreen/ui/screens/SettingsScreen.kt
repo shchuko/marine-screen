@@ -33,6 +33,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -80,9 +81,11 @@ private enum class PasswordState(
 fun SettingsScreen(
     stationSettings: WindGuruSettings = WindGuruSettings.NOT_SET,
     onSaveClick: (WindGuruSettings) -> Unit = {},
-    onTestConnection: (uid: String, password: String) -> Unit = { _, _ -> },
+    onScreenScaleSettingsClick: () -> Unit = {},
     onBackConfirmed: () -> Unit = {},
+    screenScale: Float = 100f,
 ) {
+    val configuration = LocalConfiguration.current
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val backButtonFocusRequester = remember { FocusRequester() }
@@ -136,7 +139,10 @@ fun SettingsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(32.dp)
+            .padding(
+                horizontal = 32.dp + getWPaddingForScreenScale(screenScale, configuration),
+                vertical = 32.dp + getHPaddingForScreenScale(screenScale, configuration),
+            )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -262,9 +268,15 @@ fun SettingsScreen(
 
 
                 TvFocusableTextButton(
-                    onClick = { onTestConnection(stationUid, password) },
+                    onClick = {
+                        if (settingsModified) {
+                            showExitConfirmation = true
+                        } else {
+                            onScreenScaleSettingsClick()
+                        }
+                    },
                 ) {
-                    Text(stringResource(R.string.button_test_connection))
+                    Text(stringResource(R.string.button_settings_screen_scale))
                 }
             }
 

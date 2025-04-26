@@ -18,7 +18,7 @@
     <string name="password_label">Пароль</string>
     <string name="password_placeholder">Введите пароль</string>
     <string name="password_value_hidden">&lt;текущий пароль скрыт&gt;</string>
-    <string name="screen_scale_label">Текущий: </string>
+    <string name="screen_scale_label">Текущий:</string>
     <string name="screen_scale_title">Масштаб Экрана</string>
     <string name="settings_title">Настройки</string>
     <string name="station_uid_label">UID станции</string>

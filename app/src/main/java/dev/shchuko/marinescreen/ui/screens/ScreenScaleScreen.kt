@@ -19,8 +19,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-
-import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import dev.shchuko.marinescreen.R
 import dev.shchuko.marinescreen.ui.tv.TvFocusableButton
 import dev.shchuko.marinescreen.ui.tv.TvFocusableTextButton
-import kotlin.math.min
 
 @Composable
 @Preview(
@@ -44,20 +42,22 @@ import kotlin.math.min
     uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_TELEVISION,
 )
 fun ScreenScaleScreen(
-    initialPaddingPercent: Double = 0.0,
-    onSave: (paddingPercent: Double) -> Unit = {},
+    currentScreenScale: Float = 100f,
+    onSave: (paddingPercent: Float) -> Unit = {},
     onBack: () -> Unit = {},
 ) {
-    var paddingPercent by remember { mutableDoubleStateOf(initialPaddingPercent) }
-    val configuration = LocalConfiguration.current
-    val minSideDp = min(configuration.screenWidthDp, configuration.screenHeightDp)
-    val actualPaddingDp = (paddingPercent / 100f) * minSideDp
+    var screenScale by remember { mutableFloatStateOf(currentScreenScale) }
+    val configuration: Configuration = LocalConfiguration.current
 
     BackHandler { onBack() }
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = actualPaddingDp.dp, vertical = actualPaddingDp.dp),
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                horizontal = getWPaddingForScreenScale(screenScale, configuration),
+                vertical = getHPaddingForScreenScale(screenScale, configuration),
+            ),
     ) {
         Background()
 
@@ -81,7 +81,9 @@ fun ScreenScaleScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Row(
-                        modifier = Modifier.wrapContentSize().widthIn(400.dp),
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .widthIn(400.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
@@ -92,7 +94,7 @@ fun ScreenScaleScreen(
                         )
 
                         TvFocusableTextButton(
-                            onClick = { onSave(paddingPercent) },
+                            onClick = { onSave(screenScale) },
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -103,7 +105,7 @@ fun ScreenScaleScreen(
 
 
                     Text(
-                        text = stringResource(R.string.screen_scale_label) + "%.1f".format((100 - paddingPercent)),
+                        text = stringResource(R.string.screen_scale_label) + " %.1f".format(screenScale) + "%",
                         style = MaterialTheme.typography.headlineSmall,
                     )
 
@@ -113,7 +115,7 @@ fun ScreenScaleScreen(
                     ) {
                         TvFocusableButton(
                             onClick = {
-                                paddingPercent = (paddingPercent + 0.5).coerceAtMost(5.0)
+                                screenScale = (screenScale + 0.5f).coerceAtMost(100f)
                             },
                         ) {
                             Text(stringResource(R.string.button_zoom_in))
@@ -121,14 +123,14 @@ fun ScreenScaleScreen(
 
                         TvFocusableButton(
                             onClick = {
-                                paddingPercent = (paddingPercent - 0.5).coerceAtLeast(0.0)
+                                screenScale = (screenScale - 0.5f).coerceAtLeast(95f)
                             },
                         ) {
                             Text(stringResource(R.string.button_zoom_out))
                         }
 
                         TvFocusableButton(
-                            onClick = { onSave(paddingPercent) },
+                            onClick = { onSave(screenScale) },
                         ) {
                             Text(stringResource(R.string.button_save))
                         }

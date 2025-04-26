@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.shchuko.marinescreen.ui.MainViewModel
 import dev.shchuko.marinescreen.ui.Screen
+import dev.shchuko.marinescreen.ui.screens.ScreenScaleScreen
 import dev.shchuko.marinescreen.ui.screens.SettingsScreen
 import dev.shchuko.marinescreen.ui.screens.TermsPopupContent
 import dev.shchuko.marinescreen.ui.screens.WeatherScreen
@@ -31,6 +32,7 @@ class MainActivity : ComponentActivity() {
             val time by viewModel.time.collectAsState()
             val firstNtpSyncDone by viewModel.firstNtpSyncDone.collectAsState()
             val settings by viewModel.stationSettings.collectAsState()
+            val screenScale by viewModel.screenScale.collectAsState()
 
             NavHost(
                 navController = navController,
@@ -71,12 +73,25 @@ class MainActivity : ComponentActivity() {
                         onSaveClick = {
                             viewModel.saveStationSettings(it)
                         },
-                        onTestConnection = { uid, password -> /* TODO */ },
-                        onBackConfirmed = { navController.popBackStack() }
+                        onScreenScaleSettingsClick = { navController.navigate(Screen.ScreenScaleSettings.route) },
+                        onBackConfirmed = { navController.popBackStack() },
+                        screenScale = screenScale,
+                    )
+                }
+
+                composable(Screen.ScreenScaleSettings.route) {
+                    ScreenScaleScreen(
+                        currentScreenScale = screenScale,
+                        onSave = {
+                            viewModel.saveScreenScaleSetting(it);
+                            navController.popBackStack()
+                        },
+                        onBack = {
+                            navController.popBackStack()
+                        },
                     )
                 }
             }
         }
-
     }
 }
