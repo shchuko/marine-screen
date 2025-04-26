@@ -14,7 +14,9 @@ data class StationMeasurements(
     val historical: List<StationMeasurement> = emptyList(),
     val error: StationError? = null,
     val lastUpdatedAt: Instant? = null,
-)
+) {
+    val lastMeasurementAt: Instant? = historical.lastOrNull()?.timestamp
+}
 
 data class StationMeasurement(
     val timestamp: Instant,

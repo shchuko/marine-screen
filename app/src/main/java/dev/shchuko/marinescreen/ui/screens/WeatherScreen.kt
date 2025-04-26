@@ -64,6 +64,7 @@ import com.patrykandpatrick.vico.core.scroll.Scroll
 import com.patrykandpatrick.vico.core.zoom.Zoom
 import dev.shchuko.marinescreen.R
 import dev.shchuko.marinescreen.domain.model.PreciseTime
+import dev.shchuko.marinescreen.domain.model.StationErrorKind
 import dev.shchuko.marinescreen.domain.model.StationMeasurement
 import dev.shchuko.marinescreen.domain.model.StationMeasurements
 import dev.shchuko.marinescreen.ui.tv.KeepScreenOn
@@ -139,7 +140,15 @@ internal fun WeatherScreen(
                     verticalAlignment = Alignment.Bottom,
                 ) {
                     Text(
-                        "marine-screen.shchuko.dev",
+                        when (measurements.error?.kind) {
+                            StationErrorKind.WRONG_STATION_LOGIN -> "Failed to load data, wrong password"
+                            StationErrorKind.UNKNOWN_STATION -> "Failed to load data, station is unknown"
+                            StationErrorKind.UNKNOWN_QUERY -> "Failed to load data, invalid query"
+                            StationErrorKind.CONNECTION_ERROR -> "Failed to connect"
+                            StationErrorKind.INTERNAL_ERROR -> "Internal error ${measurements.error?.message ?: ""}"
+                            StationErrorKind.UNKNOWN -> "Unknown error ${measurements.error?.message ?: ""}"
+                            null -> "marine-screen.shchuko.dev"
+                        },
                         style = TextStyle(fontSize = 16.textDp)
                     )
                     Text("Updated ${measurements.lastMeasurementAt?.let { updatedAt -> time.time.minus(updatedAt).inWholeMinutes} ?: "--"} min ago", style = TextStyle(fontSize = 16.textDp))
