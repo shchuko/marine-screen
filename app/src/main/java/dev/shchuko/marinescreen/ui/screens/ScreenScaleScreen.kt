@@ -28,6 +28,10 @@ import dev.shchuko.marinescreen.R
 import dev.shchuko.marinescreen.ui.tv.TvFocusableButton
 import dev.shchuko.marinescreen.ui.tv.TvFocusableTextButton
 import kotlin.math.min
+import androidx.compose.material3.Surface
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import dev.shchuko.marinescreen.ui.tv.handleDPadKeyEvents
 
 @Composable
 @Preview(
@@ -41,106 +45,63 @@ fun ScreenScaleScreen(
 ) {
     val focusManager = LocalFocusManager.current
     val backButtonFocusRequester = remember { FocusRequester() }
-
     var paddingPercent by remember { mutableDoubleStateOf(initialPaddingPercent) }
-    val density = LocalDensity.current
     val configuration = LocalConfiguration.current
-
-    val screenWidthDp = configuration.screenWidthDp
-    val screenHeightDp = configuration.screenHeightDp
-    val minSideDp = min(screenWidthDp, screenHeightDp)
+    val minSideDp = min(configuration.screenWidthDp, configuration.screenHeightDp)
     val actualPaddingDp = (paddingPercent / 100f) * minSideDp
-    BackHandler {
-        onBack()
-    }
+
+    BackHandler { onBack() }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        // Advanced calibration pattern
-        Canvas(
+        Background(actualPaddingDp)
+
+        Surface(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = actualPaddingDp.dp, vertical = actualPaddingDp.dp)
-        ) {
-            val stripeWidth = size.width / 7
-            val colors = listOf(
-                Color.LightGray,
-                Color.Yellow,
-                Color.Cyan,
-                Color.Green,
-                Color.Magenta,
-                Color.Red,
-                Color.Blue,
-            )
-            colors.forEachIndexed { index, color ->
-                drawRect(
-                    color = color,
-                    topLeft = androidx.compose.ui.geometry.Offset(x = index * stripeWidth, y = 0f),
-                    size = androidx.compose.ui.geometry.Size(stripeWidth, size.height)
-                )
-            }
-
-            // Corner markers
-            val cornerSize = size.minDimension / 15
-            val markerColor = Color.Black
-
-            drawRect(markerColor, topLeft = androidx.compose.ui.geometry.Offset(0f, 0f), size = androidx.compose.ui.geometry.Size(cornerSize, 10f))
-            drawRect(markerColor, topLeft = androidx.compose.ui.geometry.Offset(0f, 0f), size = androidx.compose.ui.geometry.Size(10f, cornerSize))
-
-            drawRect(markerColor, topLeft = androidx.compose.ui.geometry.Offset(size.width - cornerSize, 0f), size = androidx.compose.ui.geometry.Size(cornerSize, 10f))
-            drawRect(markerColor, topLeft = androidx.compose.ui.geometry.Offset(size.width - 10f, 0f), size = androidx.compose.ui.geometry.Size(10f, cornerSize))
-
-            drawRect(markerColor, topLeft = androidx.compose.ui.geometry.Offset(0f, size.height - 10f), size = androidx.compose.ui.geometry.Size(cornerSize, 10f))
-            drawRect(markerColor, topLeft = androidx.compose.ui.geometry.Offset(0f, size.height - cornerSize), size = androidx.compose.ui.geometry.Size(10f, cornerSize))
-
-            drawRect(markerColor, topLeft = androidx.compose.ui.geometry.Offset(size.width - cornerSize, size.height - 10f), size = androidx.compose.ui.geometry.Size(cornerSize, 10f))
-            drawRect(markerColor, topLeft = androidx.compose.ui.geometry.Offset(size.width - 10f, size.height - cornerSize), size = androidx.compose.ui.geometry.Size(10f, cornerSize))
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
                 .padding(32.dp)
-                .padding(horizontal = actualPaddingDp.dp, vertical = actualPaddingDp.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+                .padding(horizontal = actualPaddingDp.dp, vertical = actualPaddingDp.dp)
+                .wrapContentSize(Alignment.Center), // <- Center small Surface,
+            color = MaterialTheme.colorScheme.surface,
+            tonalElevation = 2.dp,
+            shadowElevation = 4.dp,
+//            shape = MaterialTheme.shapes.medium, // Optional: add slight rounding
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Screen scale",
-                    fontSize = MaterialTheme.typography.headlineMedium.fontSize,
-                    fontWeight = FontWeight.Bold
-                )
-
-                TvFocusableTextButton(
-                    onClick = onBack,
-                    modifier = Modifier.focusRequester(backButtonFocusRequester),
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
-                    )
-                }
-            }
-
             Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier
+                    .padding(24.dp) // internal padding inside Surface
+                    .wrapContentSize(),
+                verticalArrangement = Arrangement.spacedBy(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Spacer(Modifier.height(64.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Screen scale",
+                        fontSize = MaterialTheme.typography.headlineMedium.fontSize,
+                        fontWeight = FontWeight.Bold,
+                    )
+
+                    Spacer(Modifier.width(24.dp))
+                    TvFocusableTextButton(
+                        onClick = { onSave(paddingPercent) },
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                        )
+                    }
+                }
+
 
                 Text(
-                    text = "Current screen scale ${100 - paddingPercent}%",
-                    style = MaterialTheme.typography.headlineSmall
+                    text = "Current screen scale ${"%.1f".format((100 - paddingPercent))}%",
+                    style = MaterialTheme.typography.headlineSmall,
                 )
-
-                Spacer(Modifier.height(32.dp))
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     TvFocusableButton(
                         onClick = {
@@ -157,19 +118,73 @@ fun ScreenScaleScreen(
                     ) {
                         Text("Zoom out")
                     }
-                }
-            }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                TvFocusableButton(
-                    onClick = { onSave(paddingPercent) },
-                ) {
-                    Text("Save")
+                    TvFocusableButton(
+                        onClick = { onSave(paddingPercent) },
+                    ) {
+                        Text("Save")
+                    }
                 }
+
+
             }
         }
+
+    }
+}
+
+@Composable
+private fun Background(actualPaddingDp: Double) {
+    // Background canvas
+    Canvas(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = actualPaddingDp.dp, vertical = actualPaddingDp.dp)
+    ) {
+        val stripeWidth = size.width / 7
+        val colors = listOf(
+            Color.LightGray,
+            Color.Yellow,
+            Color.Cyan,
+            Color.Green,
+            Color.Magenta,
+            Color.Red,
+            Color.Blue,
+        )
+        colors.forEachIndexed { index, color ->
+            drawRect(
+                color = color,
+                topLeft = Offset(x = index * stripeWidth, y = 0f),
+                size = Size(stripeWidth, size.height)
+            )
+        }
+        // Corner markers
+        val cornerSize = size.minDimension / 15
+        val markerColor = Color.Black
+
+        drawRect(markerColor, topLeft = Offset(0f, 0f), size = Size(cornerSize, 10f))
+        drawRect(markerColor, topLeft = Offset(0f, 0f), size = Size(10f, cornerSize))
+        drawRect(
+            markerColor,
+            topLeft = Offset(size.width - cornerSize, 0f),
+            size = Size(cornerSize, 10f)
+        )
+        drawRect(markerColor, topLeft = Offset(size.width - 10f, 0f), size = Size(10f, cornerSize))
+        drawRect(markerColor, topLeft = Offset(0f, size.height - 10f), size = Size(cornerSize, 10f))
+        drawRect(
+            markerColor,
+            topLeft = Offset(0f, size.height - cornerSize),
+            size = Size(10f, cornerSize)
+        )
+        drawRect(
+            markerColor,
+            topLeft = Offset(size.width - cornerSize, size.height - 10f),
+            size = Size(cornerSize, 10f)
+        )
+        drawRect(
+            markerColor,
+            topLeft = Offset(size.width - 10f, size.height - cornerSize),
+            size = Size(10f, cornerSize)
+        )
     }
 }
