@@ -11,11 +11,15 @@
     <string name="button_save">Зберегти</string>
     <string name="button_settings">Налаштування</string>
     <string name="button_test_connection">Перевірити з’єднання</string>
+    <string name="button_zoom_in">Збільшити</string>
+    <string name="button_zoom_out">Зменшити</string>
     <string name="display_name_label">Назва станції (залиште порожнім, щоб використовувати стандартне)</string>
     <string name="display_name_placeholder">Наприклад: Севан</string>
     <string name="password_label">Пароль</string>
     <string name="password_placeholder">Введіть пароль</string>
     <string name="password_value_hidden">&lt;пароль приховано&gt;</string>
+    <string name="screen_scale_label">Зараз: </string>
+    <string name="screen_scale_title">Масштаб Екрана</string>
     <string name="settings_title">Налаштування</string>
     <string name="station_uid_label">UID станції</string>
     <string name="station_uid_placeholder">Введіть UID станції</string>
