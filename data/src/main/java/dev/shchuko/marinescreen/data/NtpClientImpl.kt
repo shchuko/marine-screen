@@ -7,6 +7,8 @@ import kotlinx.datetime.Instant
 import org.apache.commons.net.ntp.NTPUDPClient
 import java.io.IOException
 import java.net.InetAddress
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.toJavaDuration
 
 class NtpClientImpl : NtpClient {
     private val addresses = listOf(
@@ -16,6 +18,7 @@ class NtpClientImpl : NtpClient {
 
     override suspend fun getCurrent(): Instant = withContext(Dispatchers.IO) {
         NTPUDPClient().use { client ->
+            client.setDefaultTimeout(5.seconds.toJavaDuration())
             var lastException: Throwable? = null
             for (address in addresses) {
                 try {
