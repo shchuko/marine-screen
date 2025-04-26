@@ -107,11 +107,13 @@ internal fun WeatherScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 15.dp),
                         horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         MyTextClock(time)
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Absolute.Right,
+                            verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Text(measurements.stationName ?: stringResource(R.string.display_name_default), style = TextStyle(fontSize = 25.textDp))
                             TvFocusableTextButton(onClick = onSettingsClick) {
@@ -140,7 +142,7 @@ internal fun WeatherScreen(
                         "marine-screen.shchuko.dev",
                         style = TextStyle(fontSize = 16.textDp)
                     )
-                    Text("Updated ${measurements.lastUpdatedAt?.let { updatedAt -> time.time.minus(updatedAt).inWholeMinutes} ?: "--"} min ago", style = TextStyle(fontSize = 16.textDp))
+                    Text("Updated ${measurements.lastMeasurementAt?.let { updatedAt -> time.time.minus(updatedAt).inWholeMinutes} ?: "--"} min ago", style = TextStyle(fontSize = 16.textDp))
                 }
             }
         }
