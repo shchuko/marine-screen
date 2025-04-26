@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -27,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
@@ -64,7 +67,7 @@ import com.patrykandpatrick.vico.core.scroll.Scroll
 import com.patrykandpatrick.vico.core.zoom.Zoom
 import dev.shchuko.marinescreen.R
 import dev.shchuko.marinescreen.domain.model.PreciseTime
-import dev.shchuko.marinescreen.domain.model.StationErrorKind
+import dev.shchuko.marinescreen.domain.model.StationError
 import dev.shchuko.marinescreen.domain.model.StationMeasurement
 import dev.shchuko.marinescreen.domain.model.StationMeasurements
 import dev.shchuko.marinescreen.ui.tv.KeepScreenOn
@@ -96,10 +99,12 @@ internal fun WeatherScreen(
     }
 
     Scaffold(
-        Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).padding(
-            horizontal = getWPaddingForScreenScale(screenScale, configuration),
-            vertical = getHPaddingForScreenScale(screenScale, configuration),
-        ),
+        Modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .padding(
+                horizontal = getWPaddingForScreenScale(screenScale, configuration),
+                vertical = getHPaddingForScreenScale(screenScale, configuration),
+            ),
         topBar = {
             TopAppBar(
                 title = {
@@ -137,21 +142,57 @@ internal fun WeatherScreen(
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Bottom,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Absolute.Left,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        val details = measurements.error?.details
+                        if (details != null) {
+                            Icon(
+                                imageVector = Icons.Default.Warning,
+                                modifier = Modifier.scale(0.8f),
+                                contentDescription = "Warning"
+                            )
+                            Spacer(Modifier.width(5.dp))
+                        }
+                        Text(
+                            when (details) {
+                                is StationError.ConnectionError -> "Failed to connect to ${details.provider}"
+                                is StationError.InternalError -> "Internal error" + details.message?.let {
+                                    ": ${
+                                        it.substring(
+                                            0,
+                                            100
+                                        )
+                                    }"
+                                }
+
+                                is StationError.Unknown -> "Unknown error" + details.message?.let {
+                                    ": ${
+                                        it.substring(
+                                            0,
+                                            100
+                                        )
+                                    }"
+                                }
+
+                                is StationError.UnknownStation -> "Station '${details.station}' is not found"
+                                is StationError.WrongStationLogin -> "Invalid password for '${details.station}' station"
+                                null -> "marine-screen.shchuko.dev"
+                            },
+                            style = TextStyle(fontSize = 16.textDp)
+                        )
+                    }
                     Text(
-                        when (measurements.error?.kind) {
-                            StationErrorKind.WRONG_STATION_LOGIN -> "Failed to load data, wrong password"
-                            StationErrorKind.UNKNOWN_STATION -> "Failed to load data, station is unknown"
-                            StationErrorKind.UNKNOWN_QUERY -> "Failed to load data, invalid query"
-                            StationErrorKind.CONNECTION_ERROR -> "Failed to connect"
-                            StationErrorKind.INTERNAL_ERROR -> "Internal error ${measurements.error?.message ?: ""}"
-                            StationErrorKind.UNKNOWN -> "Unknown error ${measurements.error?.message ?: ""}"
-                            null -> "marine-screen.shchuko.dev"
-                        },
-                        style = TextStyle(fontSize = 16.textDp)
-                    )
-                    Text("Updated ${measurements.lastMeasurementAt?.let { updatedAt -> time.time.minus(updatedAt).inWholeMinutes} ?: "--"} min ago", style = TextStyle(fontSize = 16.textDp))
+                        "Updated ${
+                            measurements.lastMeasurementAt?.let { updatedAt ->
+                                time.time.minus(
+                                    updatedAt
+                                ).inWholeMinutes
+                            } ?: "--"
+                        } min ago", style = TextStyle(fontSize = 16.textDp))
                 }
             }
         }

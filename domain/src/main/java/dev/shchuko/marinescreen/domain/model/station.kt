@@ -12,7 +12,7 @@ data class StationMeasurements(
     val stationName: String? = null,
     val current: StationMeasurement? = null,
     val historical: List<StationMeasurement> = emptyList(),
-    val error: StationError? = null,
+    val error: StationErrorException? = null,
     val lastUpdatedAt: Instant? = null,
 ) {
     val lastMeasurementAt: Instant? = historical.lastOrNull()?.timestamp
@@ -32,17 +32,16 @@ data class StationMeasurement(
 }
 
 
-enum class StationErrorKind {
-    WRONG_STATION_LOGIN,
-    UNKNOWN_STATION,
-    UNKNOWN_QUERY,
-    CONNECTION_ERROR,
-    INTERNAL_ERROR,
-    UNKNOWN,
+sealed interface StationError {
+    data class Unknown(val message: String? = null) : StationError
+    data class InternalError(val message: String? = null) : StationError
+    data class ConnectionError(val provider: String = "WindGuru", val message: String? = null) : StationError
+    data class UnknownStation(val station: String) : StationError
+    data class WrongStationLogin(val station: String) : StationError
 }
 
-class StationError(
-    val kind: StationErrorKind = StationErrorKind.UNKNOWN,
+class StationErrorException(
+    val details: StationError = StationError.Unknown(),
     message: String? = null,
     cause: Throwable? = null,
 ) : Exception(message, cause)

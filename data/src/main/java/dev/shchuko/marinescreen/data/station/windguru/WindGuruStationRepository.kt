@@ -4,10 +4,10 @@ import android.util.Log
 import dev.shchuko.marinescreen.domain.PreciseTimeProvider
 import dev.shchuko.marinescreen.domain.SettingsRepository
 import dev.shchuko.marinescreen.domain.StationRepository
+import dev.shchuko.marinescreen.domain.model.StationError
 import dev.shchuko.marinescreen.domain.model.StationMeasurement
 import dev.shchuko.marinescreen.domain.model.StationMeasurements
-import dev.shchuko.marinescreen.domain.model.StationError
-import dev.shchuko.marinescreen.domain.model.StationErrorKind
+import dev.shchuko.marinescreen.domain.model.StationErrorException
 import dev.shchuko.marinescreen.domain.model.WindGuruSettings
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -105,7 +105,7 @@ class WindGuruStationRepository(
                 timeWindowStart,
             ).max()
 
-            var error: StationError? = null
+            var error: StationErrorException? = null
             val fetchResult = try {
                 if (settings.windGuruUid.isEmpty()) {
                     emptyList()
@@ -118,14 +118,14 @@ class WindGuruStationRepository(
                         intervalMinutes = 1,
                     )
                 }
-            } catch (e: StationError) {
+            } catch (e: StationErrorException) {
                 error = e
                 null
             }
 
             Log.d(
                 LOG_TAG,
-                "Fetch done uid=${settings.windGuruUid} old=${prevMeasurements.historical.size} new=${fetchResult?.size} errorKind=${error?.kind} errorMessage=${error?.message}"
+                "Fetch done uid=${settings.windGuruUid} old=${prevMeasurements.historical.size} new=${fetchResult?.size} errorKind=${error?.details} errorMessage=${error?.message}"
             )
             val merged = mergeMeasurements(
                 from = timeWindowStart,
@@ -258,50 +258,50 @@ class WindGuruStationRepository(
         } else {
             Log.d(LOG_TAG, "WindGuru data fetch failed, parsing error uid=${stationUid}")
             val parsed = parseWindGuruResponse<WindGuruErrorResponseDto>(bodyString)
-            val throwable = parsed.toThrowable()
+            val throwable = parsed.toThrowable(stationUid = stationUid)
             Log.d(
                 LOG_TAG,
-                "WindGuru data fetch failed, error parsed uid=${stationUid} kind=${throwable.kind} message=${throwable.message}"
+                "WindGuru data fetch failed, error parsed uid=${stationUid} kind=${throwable.details} message=${throwable.message}"
             )
             throw throwable
         }
     } catch (ce: CancellationException) {
         throw ce
-    } catch (e: StationError) {
+    } catch (e: StationErrorException) {
         throw e
     } catch (e: IOException) {
         Log.d(LOG_TAG, "WindGuru data fetch failed, IOException uid=${stationUid}", e)
-        throw StationError(StationErrorKind.CONNECTION_ERROR, cause = e)
+        throw StationErrorException(StationError.ConnectionError(message =e.message), cause = e)
     } catch (e: Exception) {
         Log.d(LOG_TAG, "WindGuru data fetch failed, unknown exception uid=${stationUid}", e)
-        throw StationError(StationErrorKind.INTERNAL_ERROR, cause = e)
+        throw StationErrorException(StationError.InternalError(e.message), cause = e)
     }
 
     // WindGuru may respond with empty list [] instead of empty json {}
     private inline fun <reified T> parseWindGuruResponse(response: String): T =
         relaxedJson.decodeFromString<T>(if (response == "[]") "{}" else response)
 
-    private fun WindGuruErrorResponseDto.toThrowable() = StationError(
+    private fun WindGuruErrorResponseDto.toThrowable(stationUid: String) = StationErrorException(
         message = errorMessage,
-        kind = when {
+        details = when {
             errorMessage.isNullOrEmpty() -> {
-                StationErrorKind.UNKNOWN
+                StationError.Unknown()
             }
 
             errorMessage.contains("wrong station login", ignoreCase = true) -> {
-                StationErrorKind.WRONG_STATION_LOGIN
+                StationError.WrongStationLogin(station = stationUid)
             }
 
             errorMessage.contains("unknown station", ignoreCase = true) -> {
-                StationErrorKind.UNKNOWN_STATION
+                StationError.UnknownStation(station = stationUid)
             }
 
             errorMessage.contains("unknown query", ignoreCase = true) -> {
-                StationErrorKind.UNKNOWN_QUERY
+                StationError.InternalError("Unknown query")
             }
 
             else -> {
-                StationErrorKind.UNKNOWN
+                StationError.Unknown()
             }
         },
     )
