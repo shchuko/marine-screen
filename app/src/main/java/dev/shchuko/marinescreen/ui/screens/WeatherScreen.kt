@@ -137,7 +137,7 @@ internal fun WeatherScreen(
         bottomBar = {
             BottomAppBar(
                 modifier = Modifier.height(28.dp),
-                contentPadding = PaddingValues(2.dp, 2.dp, 2.dp, 2.dp)
+                contentPadding = PaddingValues(start = 10.dp, top = 2.dp, end = 10.dp, bottom = 2.dp)
             ) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
