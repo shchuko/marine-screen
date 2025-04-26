@@ -10,10 +10,11 @@
     <string name="button_reveal_password">Показати пароль</string>
     <string name="button_save">Зберегти</string>
     <string name="button_settings">Налаштування</string>
+    <string name="button_settings_screen_scale">Налаштування Масштабу Екрану</string>
     <string name="button_test_connection">Перевірити з’єднання</string>
     <string name="button_zoom_in">Збільшити</string>
     <string name="button_zoom_out">Зменшити</string>
-    <string name="display_name_label">Назва станції (залиште порожнім, щоб використовувати стандартне)</string>
+    <string name="display_name_label">Назва станції (необов'язково)</string>
     <string name="display_name_placeholder">Наприклад: Севан</string>
     <string name="password_label">Пароль</string>
     <string name="password_placeholder">Введіть пароль</string>

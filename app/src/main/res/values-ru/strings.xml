@@ -10,10 +10,11 @@
     <string name="button_reveal_password">Показать пароль</string>
     <string name="button_save">Сохранить</string>
     <string name="button_settings">Настройки</string>
+    <string name="button_settings_screen_scale">Настройка Масштаба Экрана</string>
     <string name="button_test_connection">Проверить соединение</string>
     <string name="button_zoom_in">Увеличить</string>
     <string name="button_zoom_out">Уменьшить</string>
-    <string name="display_name_label">Название станции (оставьте пустым, чтобы использовать имя по умолчанию)</string>
+    <string name="display_name_label">Название станции (опционально)</string>
     <string name="display_name_placeholder">Например: Севан</string>
     <string name="password_label">Пароль</string>
     <string name="password_placeholder">Введите пароль</string>

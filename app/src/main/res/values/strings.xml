@@ -16,7 +16,7 @@
     <string name="button_zoom_in">Zoom In</string>
     <string name="button_zoom_out">Zoom Out</string>
     <string name="display_name_default" translatable="false">Local Weather</string>
-    <string name="display_name_label">Station Name (leave empty to use a default one)</string>
+    <string name="display_name_label">Station Name (optional)</string>
     <string name="display_name_placeholder">e.g., Sevan</string>
     <string name="password_label">WindGuru Station Password</string>
     <string name="password_placeholder">Enter https://stations.windguru.cz password</string>
