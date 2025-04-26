@@ -121,7 +121,7 @@ internal fun WeatherScreen(
                             horizontalArrangement = Arrangement.Absolute.Right,
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Text(measurements.stationName ?: stringResource(R.string.display_name_default), style = TextStyle(fontSize = 25.textDp))
+                            Text(measurements.stationName ?: "", style = TextStyle(fontSize = 25.textDp))
                             TvFocusableTextButton(onClick = onSettingsClick) {
                                 Icon(
                                     imageVector = Icons.Default.Settings,
