@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -80,18 +81,24 @@ internal fun WeatherScreen(
     time: PreciseTime,
     firstNtpSyncDone: Boolean,
     measurements: StationMeasurements,
+    screenScale: Float,
     onSettingsClick: () -> Unit = {},
 ) {
     KeepScreenOn()
 
+    val configuration = LocalConfiguration.current
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val windGraphModelProducer = remember { CartesianChartModelProducer.build() }
+
     LaunchedEffect(measurements.historical, firstNtpSyncDone) {
         updateGraphModel(windGraphModelProducer, time.time, measurements.historical)
     }
 
     Scaffold(
-        Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        Modifier.nestedScroll(scrollBehavior.nestedScrollConnection).padding(
+            horizontal = getWPaddingForScreenScale(screenScale, configuration),
+            vertical = getHPaddingForScreenScale(screenScale, configuration),
+        ),
         topBar = {
             TopAppBar(
                 title = {

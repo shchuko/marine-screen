@@ -61,6 +61,7 @@ class MainActivity : ComponentActivity() {
                         time = time,
                         firstNtpSyncDone = firstNtpSyncDone,
                         measurements = stationSnapshot,
+                        screenScale = screenScale,
                         onSettingsClick = {
                             navController.navigate(Screen.Settings.route)
                         }
