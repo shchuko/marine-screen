@@ -23,7 +23,7 @@ class NtpClientImpl : NtpClient {
             for (address in addresses) {
                 try {
                     val timeInfo = client.getTime(InetAddress.getByName(address))
-                    return@withContext Instant.fromEpochMilliseconds(timeInfo.message.receiveTimeStamp.time)
+                    return@withContext Instant.fromEpochMilliseconds(timeInfo.returnTime + timeInfo.offset)
                 } catch (e: IOException) {
                     lastException = e
                 }
