@@ -35,14 +35,14 @@ import kotlin.math.min
     uiMode = Configuration.UI_MODE_NIGHT_NO or Configuration.UI_MODE_TYPE_TELEVISION,
 )
 fun ScreenScaleScreen(
-    initialPaddingPercent: Int = 0,
-    onSave: (paddingPercent: Int) -> Unit = {},
+    initialPaddingPercent: Double = 0.0,
+    onSave: (paddingPercent: Double) -> Unit = {},
     onBack: () -> Unit = {},
 ) {
     val focusManager = LocalFocusManager.current
     val backButtonFocusRequester = remember { FocusRequester() }
 
-    var paddingPercent by remember { mutableStateOf(initialPaddingPercent) }
+    var paddingPercent by remember { mutableDoubleStateOf(initialPaddingPercent) }
     val density = LocalDensity.current
     val configuration = LocalConfiguration.current
 
@@ -132,7 +132,7 @@ fun ScreenScaleScreen(
                 Spacer(Modifier.height(64.dp))
 
                 Text(
-                    text = "Current screen scale $paddingPercent%",
+                    text = "Current screen scale ${100 - paddingPercent}%",
                     style = MaterialTheme.typography.headlineSmall
                 )
 
@@ -144,7 +144,7 @@ fun ScreenScaleScreen(
                 ) {
                     TvFocusableButton(
                         onClick = {
-                            paddingPercent = (paddingPercent + 1).coerceAtMost(100)
+                            paddingPercent = (paddingPercent + 0.5).coerceAtMost(5.0)
                         },
                     ) {
                         Text("Zoom in")
@@ -152,7 +152,7 @@ fun ScreenScaleScreen(
 
                     TvFocusableButton(
                         onClick = {
-                            paddingPercent = (paddingPercent - 1).coerceAtLeast(0)
+                            paddingPercent = (paddingPercent - 0.5).coerceAtLeast(0.0)
                         },
                     ) {
                         Text("Zoom out")
