@@ -6,3 +6,6 @@ your weather station on your Android TV screen.
 Currently, the only supported data source is WindGuru Station https://stations.windguru.cz/
 
 ![screenshot.png](images/screenshot.png)
+
+You can assemble an [acurite-bridge](https://github.com/shchuko/acurite-bridge) to publish
+your station measurements to WindGuru and other services.
