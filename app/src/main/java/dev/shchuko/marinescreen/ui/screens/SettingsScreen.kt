@@ -268,6 +268,7 @@ fun SettingsScreen(
                 }
             }
 
+            val settingsSavedStr = stringResource(R.string.toast_settings_saved)
             TvFocusableButton(
                 enabled = requiredSettingsSet && settingsModified,
                 focusable = requiredSettingsSet && settingsModified,
@@ -279,7 +280,7 @@ fun SettingsScreen(
                             windGuruPassword = effectivePasswordValue,
                         )
                     )
-                    Toast.makeText(context, "Setting saved", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, settingsSavedStr, Toast.LENGTH_SHORT).show()
 
                     passwordModified = false
                     backButtonFocusRequester.requestFocus()
@@ -298,8 +299,8 @@ fun SettingsScreen(
 
         AlertDialog(
             onDismissRequest = onDialogClose,
-            title = { Text("Changes are not saved") },
-            text = { Text("Settings are modified. Are you sure want to exit?") },
+            title = { Text(stringResource(R.string.unsaved_title)) },
+            text = { Text(stringResource(R.string.unsaved_message)) },
             dismissButton = {
                 TvFocusableTextButton(
                     onClick = onDialogClose,
@@ -307,7 +308,7 @@ fun SettingsScreen(
                         .onGloballyPositioned { alertDialogFocusRequesterReady = true }
                         .focusRequester(alertDialogFocusRequester)
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.button_cancel))
                 }
             },
             confirmButton = {
@@ -317,7 +318,7 @@ fun SettingsScreen(
                         onBackConfirmed()
                     }
                 ) {
-                    Text("Discard changes")
+                    Text(stringResource(R.string.button_discard))
                 }
             },
         )

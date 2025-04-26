@@ -25,6 +25,7 @@
     <string name="station_uid_placeholder">Введіть UID станції</string>
     <string name="terms_and_conditions_sub_title">Ви маєте погодитися з цими умовами перед використанням застосунку</string>
     <string name="terms_and_conditions_title">Умови використання</string>
+    <string name="toast_settings_saved">Налаштування збережено</string>
     <string name="unsaved_message">Вийти без збереження змін?</string>
     <string name="unsaved_title">Незбережені зміни</string>
 </resources>
